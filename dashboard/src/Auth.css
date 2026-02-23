@@ -1,0 +1,136 @@
+/* Auth.css - Zerodha Kite Style with Dark Trading Background */
+
+/* Reset default margins */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #fff;
+}
+
+/* Main Wrapper - Splits the screen into two */
+.kite-auth-wrapper {
+  display: flex;
+  height: 100vh; /* Full Viewport Height */
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ---- Left Panel (Image Area) ---- */
+.auth-left-panel {
+  flex: 1.6; /* Takes up 60% of width */
+  background-color: #1a1a1a; /* Dark fallback color if image fails */
+  
+  /* Aapki Uploaded Image */
+
+background-image: url('./login-bg.png');
+  
+  background-size: cover;      /* Puri screen cover karega */
+  background-position: center; /* Image ka center dikhayega */
+  background-repeat: no-repeat;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Right Panel (Form Area) ---- */
+.auth-right-panel {
+  flex: 1; /* Takes up remaining 40% */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center Vertically */
+  align-items: center; /* Center Horizontally */
+  background-color: #fff;
+  padding: 40px;
+}
+
+/* ---- The Form Container ---- */
+.auth-container {
+  width: 100%;
+  max-width: 380px; /* Standard Kite form width */
+  text-align: center;
+}
+
+.form-header {
+  margin-bottom: 35px;
+}
+
+.form-header h2 {
+  margin-top: 15px;
+  color: #444;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.form-subtext {
+  display: block;
+  margin-top: 5px;
+  color: #9b9b9b;
+  font-size: 0.95rem;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs - Clean & Sharp */
+.auth-container input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #fff;
+  transition: border 0.2s ease;
+  color: #333;
+}
+
+.auth-container input:focus {
+  border-color: #444; /* Dark focus border */
+}
+
+/* The Kite Orange Button */
+.auth-container button {
+  padding: 12px;
+  background: #ff5722; /* Kite Orange */
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.auth-container button:hover {
+  background: #f4511e;
+}
+
+/* Footer Links */
+.auth-footer {
+  margin-top: 30px;
+  font-size: 0.85rem;
+  color: #9b9b9b;
+}
+
+.auth-footer a {
+  color: #387ed1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.error-msg {
+  color: #d32f2f;
+  background: #ffebee;
+  padding: 10px;
+  border-radius: 2px;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  text-align: left;
+  border: 1px solid #ffcdd2;
+}
