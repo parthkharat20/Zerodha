@@ -18,6 +18,7 @@ import {
   CompareArrows,
   Book,
   Newspaper,
+  Insights,
 } from "@mui/icons-material";
 import "./Menu.css";
 
@@ -47,6 +48,7 @@ const Menu = () => {
     { path: "/dashboard/funds", icon: <AccountBalanceWallet />, label: "Funds" },
     { path: "/dashboard/alerts", icon: <Notifications />, label: "Alerts" },
     { path: "/dashboard/portfolio", icon: <Assessment />, label: "Portfolio" },
+    { path: "/dashboard/insights", icon: <Insights />, label: "Insights" },
     { path: "/dashboard/reports", icon: <Description />, label: "Reports" },
     { path: "/dashboard/calculator", icon: <Calculate />, label: "Calculator" },
     { path: "/dashboard/compare", icon: <CompareArrows />, label: "Compare" },
@@ -69,7 +71,7 @@ const Menu = () => {
         <Link to="/dashboard" style={{ textDecoration: "none" }}>
           <div className="logo-container">
             <div className="logo-icon">📈</div>
-            <span className="logo-text">TradePro</span>
+            <span className="logo-text">TradeX</span>
           </div>
         </Link>
       </div>
@@ -92,7 +94,7 @@ const Menu = () => {
 
       {/* Profile Section */}
       <div className="menu-profile">
-        <div
+        <div 
           className="profile-trigger"
           onClick={() => setIsProfileOpen(!isProfileOpen)}
         >
@@ -103,22 +105,22 @@ const Menu = () => {
             <span className="profile-name">{userName}</span>
             <span className="profile-email">view profile</span>
           </div>
-          <ExpandMore className={`profile-arrow ${isProfileOpen ? "open" : ""}`} />
+          <ExpandMore className={`profile-arrow ${isProfileOpen ? 'open' : ''}`} />
         </div>
 
         {isProfileOpen && (
           <div className="profile-dropdown-menu">
             <Link to="/dashboard/profile" className="dropdown-item">
-              <Person style={{ fontSize: "1.1rem" }} />
+              <Person style={{ fontSize: '1.1rem' }} />
               <span>My Profile</span>
             </Link>
             <Link to="/dashboard/settings" className="dropdown-item">
-              <Settings style={{ fontSize: "1.1rem" }} />
+              <Settings style={{ fontSize: '1.1rem' }} />
               <span>Settings</span>
             </Link>
             <div className="dropdown-divider" />
             <button className="dropdown-item logout-btn" onClick={handleLogout}>
-              <Logout style={{ fontSize: "1.1rem" }} />
+              <Logout style={{ fontSize: '1.1rem' }} />
               <span>Logout</span>
             </button>
           </div>

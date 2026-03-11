@@ -16,13 +16,12 @@ import {
   FilterList,
   Search,
 } from "@mui/icons-material";
-import { watchlist } from "../data/data";
 import LiveIndicator from "./LiveIndicator";
-import { updateAllPrices } from "../utils/priceSimulator";
+import { fetchMultipleStocks } from "../services/stockAPI";
 import "./WatchList.css";
 
 const WatchList = () => {
-  const [stocks, setStocks] = useState(watchlist);
+  const [stocks, setStocks] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [isLive, setIsLive] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,22 +29,84 @@ const WatchList = () => {
   const [favorites, setFavorites] = useState([]);
   const [portfolioData, setPortfolioData] = useState(null);
   const [marketMovers, setMarketMovers] = useState({ gainers: [], losers: [] });
+  const [loading, setLoading] = useState(true);
+
+  // Default watchlist stocks
+  const defaultStocks = [
+    "RELIANCE",
+    "TCS",
+    "INFY",
+    "HDFC",
+    "ICICI",
+    "SBIN",
+    "ITC",
+    "BHARTIARTL",
+    "KOTAKBANK",
+    "LT",
+  ];
 
   useEffect(() => {
+    fetchInitialPrices();
     fetchPortfolioSummary();
+  }, []);
+
+  useEffect(() => {
     if (!isLive) return;
 
     const interval = setInterval(() => {
-      setStocks(prevStocks => {
-        const updated = updateAllPrices(prevStocks);
-        setLastUpdated(new Date());
-        updateMarketMovers(updated);
-        return updated;
-      });
-    }, 5000);
+      fetchLivePrices();
+    }, 30000); // Update every 30 seconds (API limit)
 
     return () => clearInterval(interval);
-  }, [isLive]);
+  }, [isLive, stocks]);
+
+  const fetchInitialPrices = async () => {
+    setLoading(true);
+    try {
+      const priceData = await fetchMultipleStocks(defaultStocks);
+      const formattedStocks = priceData.map((data) => ({
+        name: data.symbol,
+        price: data.price,
+        percent: data.changePercent.toFixed(2),
+        isDown: data.changePercent < 0,
+        avg: data.price * 0.98, // Mock average buy price
+      }));
+      setStocks(formattedStocks);
+      updateMarketMovers(formattedStocks);
+    } catch (error) {
+      console.error("Error fetching initial prices:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLivePrices = async () => {
+    if (stocks.length === 0) return;
+
+    try {
+      const symbols = stocks.map((s) => s.name);
+      const priceData = await fetchMultipleStocks(symbols);
+
+      const updatedStocks = stocks.map((stock) => {
+        const newData = priceData.find((p) => p.symbol === stock.name);
+        if (newData) {
+          return {
+            ...stock,
+            price: newData.price,
+            percent: newData.changePercent.toFixed(2),
+            isDown: newData.changePercent < 0,
+          };
+        }
+        return stock;
+      });
+
+      setStocks(updatedStocks);
+      setLastUpdated(new Date());
+      updateMarketMovers(updatedStocks);
+    } catch (error) {
+      console.error("Error updating live prices:", error);
+    }
+  };
 
   const fetchPortfolioSummary = async () => {
     const token = localStorage.getItem("token");
@@ -71,8 +132,8 @@ const WatchList = () => {
   };
 
   const updateMarketMovers = (stockList) => {
-    const sorted = [...stockList].sort((a, b) => 
-      parseFloat(b.percent) - parseFloat(a.percent)
+    const sorted = [...stockList].sort(
+      (a, b) => parseFloat(b.percent) - parseFloat(a.percent)
     );
     setMarketMovers({
       gainers: sorted.slice(0, 3),
@@ -81,13 +142,13 @@ const WatchList = () => {
   };
 
   const toggleLive = () => {
-    setIsLive(prev => !prev);
+    setIsLive((prev) => !prev);
   };
 
   const toggleFavorite = (stockName) => {
-    setFavorites(prev => 
+    setFavorites((prev) =>
       prev.includes(stockName)
-        ? prev.filter(name => name !== stockName)
+        ? prev.filter((name) => name !== stockName)
         : [...prev, stockName]
     );
   };
@@ -96,7 +157,7 @@ const WatchList = () => {
     let filtered = stocks;
 
     if (searchQuery) {
-      filtered = filtered.filter(stock =>
+      filtered = filtered.filter((stock) =>
         stock.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -106,8 +167,6 @@ const WatchList = () => {
       sorted.sort((a, b) => parseFloat(b.percent) - parseFloat(a.percent));
     } else if (sortBy === "losers") {
       sorted.sort((a, b) => parseFloat(a.percent) - parseFloat(b.percent));
-    } else if (sortBy === "volume") {
-      sorted.sort((a, b) => b.price - a.price); // Mock volume sort
     }
 
     return sorted;
@@ -116,10 +175,19 @@ const WatchList = () => {
   const filteredStocks = getFilteredStocks();
 
   const marketStats = {
-    gainers: stocks.filter(s => !s.isDown).length,
-    losers: stocks.filter(s => s.isDown).length,
+    gainers: stocks.filter((s) => !s.isDown).length,
+    losers: stocks.filter((s) => s.isDown).length,
     totalVolume: stocks.reduce((sum, s) => sum + s.price, 0).toFixed(2),
   };
+
+  if (loading) {
+    return (
+      <div className="watchlist-container">
+        <div className="loading-spinner"></div>
+        <p>Loading real-time prices...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="watchlist-container">
@@ -132,11 +200,15 @@ const WatchList = () => {
               ₹{portfolioData.stats.totalCurrentValue?.toFixed(2) || "0.00"}
             </span>
           </div>
-          <div className={`portfolio-item ${portfolioData.stats.totalPnL >= 0 ? 'profit' : 'loss'}`}>
+          <div
+            className={`portfolio-item ${
+              portfolioData.stats.totalPnL >= 0 ? "profit" : "loss"
+            }`}
+          >
             <span className="portfolio-label">P&L</span>
             <span className="portfolio-value">
-              {portfolioData.stats.totalPnL >= 0 ? '+' : ''}
-              ₹{portfolioData.stats.totalPnL?.toFixed(2) || "0.00"}
+              {portfolioData.stats.totalPnL >= 0 ? "+" : ""}₹
+              {portfolioData.stats.totalPnL?.toFixed(2) || "0.00"}
             </span>
           </div>
           <div className="portfolio-item">
@@ -152,12 +224,12 @@ const WatchList = () => {
       <div className="watchlist-header">
         <h3 className="watchlist-title">Watchlist</h3>
         <div className="header-actions">
-          <button 
-            onClick={() => fetchPortfolioSummary()}
+          <button
+            onClick={() => fetchLivePrices()}
             className="icon-btn"
-            title="Refresh"
+            title="Refresh prices"
           >
-            <Refresh style={{ fontSize: '1rem' }} />
+            <Refresh style={{ fontSize: "1rem" }} />
           </button>
           <span className="stock-count">{stocks.length}/50</span>
         </div>
@@ -175,7 +247,7 @@ const WatchList = () => {
         />
         {searchQuery && (
           <button className="clear-search" onClick={() => setSearchQuery("")}>
-            <Close style={{ fontSize: '1rem' }} />
+            <Close style={{ fontSize: "1rem" }} />
           </button>
         )}
       </div>
@@ -184,14 +256,11 @@ const WatchList = () => {
       <div className="watchlist-controls">
         <LiveIndicator isActive={isLive} lastUpdated={lastUpdated} />
         <div className="control-btns">
-          <button 
+          <button
             onClick={toggleLive}
-            className={`control-btn ${!isLive ? 'paused' : ''}`}
+            className={`control-btn ${!isLive ? "paused" : ""}`}
           >
-            {isLive ? '⏸' : '▶'}
-          </button>
-          <button className="control-btn">
-            <FilterList style={{ fontSize: '1rem' }} />
+            {isLive ? "⏸" : "▶"}
           </button>
         </div>
       </div>
@@ -199,21 +268,21 @@ const WatchList = () => {
       {/* Market Stats */}
       <div className="market-stats">
         <div className="stat-box gainers">
-          <TrendingUp style={{ fontSize: '1rem' }} />
+          <TrendingUp style={{ fontSize: "1rem" }} />
           <div>
             <span className="stat-value">{marketStats.gainers}</span>
             <span className="stat-label">Gainers</span>
           </div>
         </div>
         <div className="stat-box losers">
-          <TrendingDown style={{ fontSize: '1rem' }} />
+          <TrendingDown style={{ fontSize: "1rem" }} />
           <div>
             <span className="stat-value">{marketStats.losers}</span>
             <span className="stat-label">Losers</span>
           </div>
         </div>
         <div className="stat-box volume">
-          <ShowChart style={{ fontSize: '1rem' }} />
+          <ShowChart style={{ fontSize: "1rem" }} />
           <div>
             <span className="stat-value">₹{marketStats.totalVolume}K</span>
             <span className="stat-label">Volume</span>
@@ -246,8 +315,8 @@ const WatchList = () => {
       {/* Stock List */}
       <ul className="stock-list">
         {filteredStocks.map((stock, index) => (
-          <WatchListItem 
-            stock={stock} 
+          <WatchListItem
+            stock={stock}
             key={index}
             isFavorite={favorites.includes(stock.name)}
             toggleFavorite={toggleFavorite}
@@ -285,8 +354,10 @@ const WatchList = () => {
 
       {/* Quick Tips */}
       <div className="quick-tips">
-        <h4>💡 Trading Tip</h4>
-        <p>Always set stop-loss orders to manage risk effectively.</p>
+        <h4>💡 Live Prices Active</h4>
+        <p>
+          Stock prices update every 30 seconds using real-time market data.
+        </p>
       </div>
     </div>
   );
@@ -296,16 +367,16 @@ export default WatchList;
 
 const WatchListItem = ({ stock, isFavorite, toggleFavorite }) => {
   const [showActions, setShowActions] = useState(false);
-  const [flashClass, setFlashClass] = useState('');
+  const [flashClass, setFlashClass] = useState("");
   const [prevPrice, setPrevPrice] = useState(stock.price);
 
   useEffect(() => {
     if (stock.price !== prevPrice) {
-      const direction = stock.price > prevPrice ? 'up' : 'down';
+      const direction = stock.price > prevPrice ? "up" : "down";
       setFlashClass(`flash-${direction}`);
       setPrevPrice(stock.price);
-      
-      const timer = setTimeout(() => setFlashClass(''), 600);
+
+      const timer = setTimeout(() => setFlashClass(""), 600);
       return () => clearTimeout(timer);
     }
   }, [stock.price, prevPrice]);
@@ -314,38 +385,35 @@ const WatchListItem = ({ stock, isFavorite, toggleFavorite }) => {
   const isPositive = priceChange >= 0;
 
   return (
-    <li 
-      onMouseEnter={() => setShowActions(true)} 
+    <li
+      onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
       className={`stock-item ${flashClass}`}
     >
       <div className="stock-content">
         <div className="stock-left">
-          <button 
-            className="favorite-btn"
-            onClick={() => toggleFavorite(stock.name)}
-          >
+          <button className="favorite-btn" onClick={() => toggleFavorite(stock.name)}>
             {isFavorite ? (
-              <Star style={{ fontSize: '0.9rem', color: '#f9a825' }} />
+              <Star style={{ fontSize: "0.9rem", color: "#f9a825" }} />
             ) : (
-              <StarBorder style={{ fontSize: '0.9rem' }} />
+              <StarBorder style={{ fontSize: "0.9rem" }} />
             )}
           </button>
           <div className="stock-info">
             <p className="stock-name">{stock.name}</p>
-            <p className="stock-exchange">NSE</p>
+            <p className="stock-exchange">NSE • LIVE</p>
           </div>
         </div>
 
         <div className="stock-right">
-          <p className={`stock-price ${isPositive ? 'up' : 'down'}`}>
+          <p className={`stock-price ${isPositive ? "up" : "down"}`}>
             ₹{stock.price.toFixed(2)}
           </p>
-          <div className={`stock-change ${isPositive ? 'up' : 'down'}`}>
+          <div className={`stock-change ${isPositive ? "up" : "down"}`}>
             {isPositive ? (
-              <KeyboardArrowUp style={{ fontSize: '0.8rem' }} />
+              <KeyboardArrowUp style={{ fontSize: "0.8rem" }} />
             ) : (
-              <KeyboardArrowDown style={{ fontSize: '0.8rem' }} />
+              <KeyboardArrowDown style={{ fontSize: "0.8rem" }} />
             )}
             <span>{Math.abs(priceChange).toFixed(2)}%</span>
           </div>
@@ -363,25 +431,23 @@ const WatchListActions = ({ uid }) => {
   return (
     <div className="stock-actions">
       <Tooltip title="Buy" placement="top" arrow>
-        <button 
-          className="action-btn buy-btn" 
+        <button
+          className="action-btn buy-btn"
           onClick={() => generalContext.openBuyWindow(uid)}
         >
           B
         </button>
       </Tooltip>
       <Tooltip title="Sell" placement="top" arrow>
-        <button 
-          className="action-btn sell-btn" 
+        <button
+          className="action-btn sell-btn"
           onClick={() => generalContext.openSellWindow(uid)}
         >
           S
         </button>
       </Tooltip>
       <Tooltip title="Chart" placement="top" arrow>
-        <button className="action-btn chart-btn">
-          📊
-        </button>
+        <button className="action-btn chart-btn">📊</button>
       </Tooltip>
     </div>
   );

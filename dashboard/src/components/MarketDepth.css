@@ -1,0 +1,149 @@
+/* Market Depth - Zerodha Theme */
+.market-depth-container {
+    background: white;
+    border: 1px solid rgb(235, 234, 234);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .depth-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgb(235, 234, 234);
+    background: rgb(248, 249, 250);
+  }
+  
+  .depth-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+    margin: 0;
+  }
+  
+  .refresh-btn {
+    background: transparent;
+    border: 1px solid rgb(224, 224, 224);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: rgb(136, 136, 136);
+    display: flex;
+    align-items: center;
+  }
+  
+  .refresh-btn:hover {
+    background: white;
+    color: rgb(65, 132, 243);
+  }
+  
+  .depth-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  
+  .section-header.buy {
+    background: rgba(72, 194, 55, 0.08);
+    color: rgb(72, 194, 55);
+  }
+  
+  .section-header.sell {
+    background: rgba(250, 118, 78, 0.08);
+    color: rgb(250, 118, 78);
+  }
+  
+  .depth-table {
+    padding: 10px 0;
+  }
+  
+  .depth-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 6px 15px;
+    font-size: 0.8rem;
+    position: relative;
+  }
+  
+  .depth-row.header {
+    color: rgb(136, 136, 136);
+    font-weight: 600;
+    background: rgb(248, 249, 250);
+  }
+  
+  .depth-row.bid,
+  .depth-row.ask {
+    position: relative;
+  }
+  
+  .depth-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0.15;
+    z-index: 0;
+  }
+  
+  .bid-bar {
+    background: rgb(72, 194, 55);
+  }
+  
+  .ask-bar {
+    background: rgb(250, 118, 78);
+    right: 0;
+    left: auto;
+  }
+  
+  .depth-row span {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .depth-row .price {
+    font-weight: 600;
+  }
+  
+  .depth-row.bid .price {
+    color: rgb(72, 194, 55);
+  }
+  
+  .depth-row.ask .price {
+    color: rgb(250, 118, 78);
+  }
+  
+  /* Current Price */
+  .current-price-section {
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(65, 132, 243, 0.05) 0%, rgba(65, 132, 243, 0.1) 100%);
+    border-top: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid rgb(235, 234, 234);
+  }
+  
+  .current-price {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .current-price .label {
+    font-size: 0.8rem;
+    color: rgb(136, 136, 136);
+    font-weight: 600;
+  }
+  
+  .current-price .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(65, 132, 243);
+  }

@@ -1,4 +1,4 @@
-/* Quick Actions FAB */
+/* Quick Actions FAB - Dark Theme */
 .quick-actions-fab {
     position: fixed;
     bottom: 30px;
@@ -13,14 +13,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: var(--shadow-lg);
     z-index: 1001;
     transition: all 0.3s;
   }
   
   .quick-actions-fab:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
   }
   
   /* Quick Actions Menu */
@@ -58,24 +58,24 @@
     color: white;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
   }
   
   .quick-action.buy {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
   }
   
   .quick-action.buy:hover {
-    background: rgb(51, 119, 231);
+    background: var(--color-blue-hover);
     transform: translateX(-5px);
   }
   
   .quick-action.sell {
-    background: rgb(255, 87, 34);
+    background: var(--color-loss);
   }
   
   .quick-action.sell:hover {
-    background: rgb(230, 74, 25);
+    background: #e53935;
     transform: translateX(-5px);
   }
   
@@ -85,10 +85,10 @@
     bottom: 30px;
     right: 380px;
     width: 280px;
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
     z-index: 1002;
     animation: slideUpFade 0.3s;
   }
@@ -98,13 +98,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--bg-secondary);
+    border-radius: 12px 12px 0 0;
   }
   
   .panel-header h4 {
     font-size: 1rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
@@ -113,7 +115,7 @@
     border: none;
     cursor: pointer;
     padding: 4px;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
   }
   
   .quick-stocks {
@@ -125,25 +127,26 @@
   
   .stock-btn {
     padding: 12px;
-    border: 1px solid rgb(224, 224, 224);
+    border: 1px solid var(--border-primary);
     border-radius: 6px;
-    background: white;
+    background: var(--bg-secondary);
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 600;
+    color: var(--text-primary);
     transition: all 0.2s;
   }
   
   .stock-btn.buy:hover {
-    background: rgba(65, 132, 243, 0.1);
-    border-color: rgb(65, 132, 243);
-    color: rgb(65, 132, 243);
+    background: rgba(41, 98, 255, 0.15);
+    border-color: var(--color-blue);
+    color: var(--color-blue);
   }
   
   .stock-btn.sell:hover {
-    background: rgba(255, 87, 34, 0.1);
-    border-color: rgb(255, 87, 34);
-    color: rgb(255, 87, 34);
+    background: rgba(239, 83, 80, 0.15);
+    border-color: var(--color-loss);
+    color: var(--color-loss);
   }
   
   /* Responsive */
@@ -154,3 +157,5 @@
       right: 30px;
     }
   }
+
+

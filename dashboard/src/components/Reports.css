@@ -1,4 +1,4 @@
-/* Reports Page - Zerodha Theme */
+/* Reports Page - Dark Theme */
 .reports-page {
     padding: 20px;
   }
@@ -13,7 +13,7 @@
   .reports-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
@@ -33,7 +33,7 @@
   }
   
   .reports-loading p {
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-size: 0.95rem;
   }
   
@@ -54,13 +54,13 @@
   
   .type-btn {
     padding: 10px 16px;
-    border: 1px solid rgb(224, 224, 224);
-    background: white;
+    border: 1px solid var(--border-primary);
+    background: var(--bg-card);
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 500;
-    color: rgb(136, 136, 136);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -68,22 +68,22 @@
   }
   
   .type-btn:hover {
-    background: rgb(248, 249, 250);
+    background: var(--bg-hover);
   }
   
   .type-btn.active {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
     color: white;
-    border-color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
   }
   
   .date-range-selector {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: white;
+    background: var(--bg-card);
     padding: 8px 12px;
-    border: 1px solid rgb(224, 224, 224);
+    border: 1px solid var(--border-primary);
     border-radius: 6px;
   }
   
@@ -92,7 +92,7 @@
     background: transparent;
     font-size: 0.85rem;
     font-weight: 500;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     cursor: pointer;
   }
   
@@ -100,10 +100,15 @@
     outline: none;
   }
   
+  .date-range-selector select option {
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+  
   /* Report Content */
   .report-content {
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 30px;
   }
@@ -114,10 +119,10 @@
   .report-table h3 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 20px 0;
     padding-bottom: 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
   }
   
   .summary-cards {
@@ -128,8 +133,8 @@
   }
   
   .summary-card {
-    background: rgb(248, 249, 250);
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 20px;
     display: flex;
@@ -138,24 +143,33 @@
   }
   
   .summary-card.profit {
-    background: rgba(72, 194, 55, 0.08);
-    border-color: rgba(72, 194, 55, 0.2);
+    background: rgba(38, 166, 154, 0.1);
+    border-color: rgba(38, 166, 154, 0.3);
+  }
+  
+  .summary-card.loss {
+    background: rgba(239, 83, 80, 0.1);
+    border-color: rgba(239, 83, 80, 0.3);
   }
   
   .card-label {
     font-size: 0.8rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-weight: 500;
   }
   
   .card-value {
     font-size: 1.4rem;
     font-weight: 700;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
   }
   
   .summary-card.profit .card-value {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
+  }
+  
+  .summary-card.loss .card-value {
+    color: var(--color-loss);
   }
   
   /* Table */
@@ -169,7 +183,7 @@
   }
   
   .report-table thead {
-    background: rgb(248, 249, 250);
+    background: var(--bg-secondary);
   }
   
   .report-table th {
@@ -177,15 +191,19 @@
     padding: 12px;
     font-size: 0.8rem;
     font-weight: 600;
-    color: rgb(136, 136, 136);
-    border-bottom: 1px solid rgb(235, 234, 234);
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-primary);
   }
   
   .report-table td {
     padding: 12px;
     font-size: 0.85rem;
-    color: rgb(71, 71, 71);
-    border-bottom: 1px solid rgb(243, 242, 242);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-primary);
+  }
+  
+  .report-table tbody tr:hover {
+    background: var(--bg-hover);
   }
   
   .stock-name {
@@ -193,12 +211,12 @@
   }
   
   .report-table .profit {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
     font-weight: 600;
   }
   
   .report-table .loss {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
     font-weight: 600;
   }
   
@@ -210,13 +228,13 @@
   }
   
   .order-type.buy {
-    background: rgba(65, 132, 243, 0.1);
-    color: rgb(65, 132, 243);
+    background: rgba(41, 98, 255, 0.2);
+    color: var(--color-blue);
   }
   
   .order-type.sell {
-    background: rgba(255, 87, 34, 0.1);
-    color: rgb(255, 87, 34);
+    background: rgba(239, 83, 80, 0.2);
+    color: var(--color-loss);
   }
   
   .status-badge {
@@ -227,8 +245,8 @@
   }
   
   .status-badge.success {
-    background: rgba(72, 194, 55, 0.1);
-    color: rgb(72, 194, 55);
+    background: rgba(38, 166, 154, 0.2);
+    color: var(--color-profit);
   }
   
   /* Tax Section */
@@ -240,8 +258,8 @@
   }
   
   .tax-card {
-    background: rgb(248, 249, 250);
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 20px;
     display: flex;
@@ -250,34 +268,34 @@
   }
   
   .tax-card.total {
-    background: rgba(65, 132, 243, 0.08);
-    border-color: rgba(65, 132, 243, 0.2);
+    background: rgba(41, 98, 255, 0.1);
+    border-color: rgba(41, 98, 255, 0.3);
   }
   
   .tax-label {
     font-size: 0.8rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-weight: 500;
   }
   
   .tax-value {
     font-size: 1.6rem;
     font-weight: 700;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
   }
   
   .tax-card.total .tax-value {
-    color: rgb(65, 132, 243);
+    color: var(--color-blue);
   }
   
   .tax-note {
     font-size: 0.75rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     margin-top: 4px;
   }
   
   .tax-info {
-    background: rgba(255, 159, 64, 0.08);
+    background: rgba(255, 159, 64, 0.1);
     border: 1px solid rgba(255, 159, 64, 0.2);
     border-radius: 8px;
     padding: 20px;
@@ -286,7 +304,7 @@
   .tax-info h4 {
     font-size: 0.9rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 12px 0;
   }
   
@@ -297,22 +315,9 @@
   
   .tax-info li {
     font-size: 0.8rem;
-    color: rgb(71, 71, 71);
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 6px;
-  }
-  
-  /* Print Styles */
-  @media print {
-    .reports-header,
-    .report-controls {
-      display: none;
-    }
-  
-    .report-content {
-      border: none;
-      padding: 0;
-    }
   }
   
   /* Responsive */

@@ -2,20 +2,34 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import GeneralContext from "./GeneralContext";
 import OrderTypeSelector from "./OrderTypeSelector";
+import { fetchStockPrice } from "../services/stockAPI";
 import "./BuyActionWindow.css";
 
 const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
-  const [stockPrice, setStockPrice] = useState(100);
+  const [stockPrice, setStockPrice] = useState(0);
+  const [livePrice, setLivePrice] = useState(0);
   const [orderType, setOrderType] = useState('MARKET');
   const [triggerPrice, setTriggerPrice] = useState('');
   const [targetPrice, setTargetPrice] = useState('');
   const [availableBalance, setAvailableBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [priceLoading, setPriceLoading] = useState(false);
   const generalContext = useContext(GeneralContext);
 
   useEffect(() => {
     fetchAvailableBalance();
-  }, []);
+    fetchLivePrice();
+  }, [uid]);
+
+  // Auto-update price every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchLivePrice();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [uid]);
 
   const fetchAvailableBalance = async () => {
     const token = localStorage.getItem("token");
@@ -26,6 +40,23 @@ const BuyActionWindow = ({ uid }) => {
       setAvailableBalance(response.data.availableBalance);
     } catch (err) {
       console.error("Error fetching balance:", err);
+    }
+  };
+
+  const fetchLivePrice = async () => {
+    try {
+      setPriceLoading(true);
+      const priceData = await fetchStockPrice(uid);
+      setLivePrice(priceData.price);
+      setStockPrice(priceData.price);
+      setLoading(false);
+      setPriceLoading(false);
+    } catch (err) {
+      console.error("Error fetching live price:", err);
+      setStockPrice(100); // Fallback
+      setLivePrice(100);
+      setLoading(false);
+      setPriceLoading(false);
     }
   };
 
@@ -96,12 +127,66 @@ const BuyActionWindow = ({ uid }) => {
 
   const orderValue = (Number(stockQuantity) * Number(stockPrice)).toFixed(2);
 
+  if (loading) {
+    return (
+      <div className="container" id="buy-window" draggable="true">
+        <div className="regular-order" style={{ textAlign: 'center', padding: '40px' }}>
+          <div className="loading-spinner" style={{ margin: '0 auto 15px' }}></div>
+          <p>Fetching live price for {uid}...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container" id="buy-window" draggable="true">
       <div className="regular-order">
         <div className="order-header">
-          <h4>{uid}</h4>
-          <p className="balance-info">Available: ₹{availableBalance.toFixed(2)}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <h4>{uid}</h4>
+            <span style={{
+              fontSize: '0.7rem',
+              color: 'rgb(72, 194, 55)',
+              background: 'rgba(72, 194, 55, 0.1)',
+              padding: '3px 8px',
+              borderRadius: '3px',
+              fontWeight: '600'
+            }}>
+              LIVE
+            </span>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <p className="balance-info">Available: ₹{availableBalance.toFixed(2)}</p>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              marginTop: '4px'
+            }}>
+              <span style={{ 
+                fontSize: '1rem', 
+                fontWeight: '700',
+                color: 'rgb(65, 132, 243)'
+              }}>
+                ₹{livePrice.toFixed(2)}
+              </span>
+              <button 
+                onClick={fetchLivePrice}
+                disabled={priceLoading}
+                style={{
+                  padding: '2px 6px',
+                  fontSize: '0.65rem',
+                  border: '1px solid rgb(224, 224, 224)',
+                  borderRadius: '2px',
+                  background: 'white',
+                  cursor: priceLoading ? 'not-allowed' : 'pointer',
+                  opacity: priceLoading ? 0.6 : 1
+                }}
+              >
+                {priceLoading ? '...' : '🔄'}
+              </button>
+            </div>
+          </div>
         </div>
 
         <OrderTypeSelector
@@ -137,6 +222,17 @@ const BuyActionWindow = ({ uid }) => {
               min="0.05"
             />
           </fieldset>
+        </div>
+
+        <div style={{
+          background: 'rgba(65, 132, 243, 0.05)',
+          padding: '10px',
+          borderRadius: '4px',
+          fontSize: '0.75rem',
+          color: 'rgb(71, 71, 71)',
+          marginTop: '10px'
+        }}>
+          💡 Price updates every 30 seconds automatically
         </div>
       </div>
       <div className="buttons">

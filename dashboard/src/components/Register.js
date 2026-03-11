@@ -1,77 +1,153 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../Auth.css";
+import { ShowChart, Person, Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
+import "./Login.css";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const res = await axios.post("http://localhost:3002/register", {
-        name,
-        email,
-        password,
+      const response = await axios.post("http://localhost:3002/register", {
+        userName: formData.userName,
+        email: formData.email,
+        password: formData.password,
       });
-      alert(res.data.message);
-      navigate("/login");
+
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userName", response.data.userName);
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <div className="kite-auth-wrapper">
-      {/* Left Panel: Background Image */}
-      <div className="auth-left-panel"></div>
+    <div className="auth-container">
+      <div className="auth-card">
+        {/* Logo */}
+        <div className="auth-logo">
+          <ShowChart style={{ fontSize: "3rem", color: "var(--color-blue)" }} />
+          <h1>TradeX</h1>
+          <p>Professional Trading Platform</p>
+        </div>
 
-      {/* Right Panel: Register Form */}
-      <div className="auth-right-panel">
-        <div className="auth-container">
-          <div className="form-header">
-            <img src="/logo.png" alt="Kite Logo" style={{ width: "40px" }} />
-            <h2>Signup now</h2>
-            <span className="form-subtext">Open a free demat account</span>
-          </div>
+        {/* Register Form */}
+        <form onSubmit={handleRegister} className="auth-form">
+          <h2>Create Account</h2>
+          <p className="auth-subtitle">Start your trading journey</p>
 
-          {error && <p className="error-msg">{error}</p>}
+          {error && <div className="error-message">{error}</div>}
 
-          <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <Person className="input-icon" />
             <input
               type="text"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="userName"
+              placeholder="Full name"
+              value={formData.userName}
+              onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="input-group">
+            <Email className="input-icon" />
             <input
               type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              placeholder="Email address"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="input-group">
+            <Lock className="input-icon" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
               required
             />
-            <button type="submit">Continue</button>
-          </form>
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </button>
+          </div>
+
+          <div className="input-group">
+            <Lock className="input-icon" />
+            <input
+              type={showPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-blue auth-btn" disabled={loading}>
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
 
           <div className="auth-footer">
             <p>
-              Already have an account? <Link to="/login">Login</Link>
+              Already have an account?{" "}
+              <Link to="/login" className="auth-link">
+                Sign in
+              </Link>
             </p>
           </div>
-        </div>
+        </form>
+      </div>
+
+      {/* Background Animation */}
+      <div className="auth-bg">
+        <div className="bg-shape shape-1"></div>
+        <div className="bg-shape shape-2"></div>
+        <div className="bg-shape shape-3"></div>
       </div>
     </div>
   );

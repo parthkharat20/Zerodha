@@ -1,4 +1,4 @@
-/* Market News - Zerodha Theme */
+/* Market News - Dark Theme */
 .market-news-page {
     padding: 20px;
   }
@@ -13,7 +13,7 @@
   .news-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
@@ -27,24 +27,24 @@
   
   .filter-btn {
     padding: 8px 16px;
-    border: 1px solid rgb(224, 224, 224);
-    background: white;
+    border: 1px solid var(--border-primary);
+    background: var(--bg-card);
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 500;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     transition: all 0.2s;
   }
   
   .filter-btn:hover {
-    background: rgb(248, 249, 250);
+    background: var(--bg-hover);
   }
   
   .filter-btn.active {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
     color: white;
-    border-color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
   }
   
   /* Market Summary */
@@ -56,8 +56,8 @@
   }
   
   .summary-card {
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 15px;
   }
@@ -65,7 +65,7 @@
   .summary-card h4 {
     font-size: 0.8rem;
     font-weight: 500;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     margin: 0 0 8px 0;
   }
   
@@ -73,14 +73,15 @@
     font-size: 0.95rem;
     font-weight: 600;
     margin: 0;
+    color: var(--text-primary);
   }
   
   .summary-card.positive p {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .summary-card.negative p {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* News Feed */
@@ -91,8 +92,8 @@
   }
   
   .news-card {
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 20px;
     display: flex;
@@ -101,7 +102,8 @@
   }
   
   .news-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
   }
   
   .news-icon {
@@ -123,25 +125,25 @@
   .news-source {
     font-size: 0.75rem;
     font-weight: 600;
-    color: rgb(65, 132, 243);
+    color: var(--color-blue);
   }
   
   .news-time {
     font-size: 0.75rem;
-    color: rgb(153, 153, 153);
+    color: var(--text-secondary);
   }
   
   .news-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 8px 0;
     line-height: 1.4;
   }
   
   .news-excerpt {
     font-size: 0.85rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     line-height: 1.5;
     margin: 0 0 12px 0;
   }
@@ -153,12 +155,12 @@
   
   .news-action-btn {
     background: transparent;
-    border: 1px solid rgb(224, 224, 224);
+    border: 1px solid var(--border-primary);
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -166,9 +168,9 @@
   }
   
   .news-action-btn:hover {
-    background: rgb(248, 249, 250);
-    border-color: rgb(65, 132, 243);
-    color: rgb(65, 132, 243);
+    background: var(--bg-hover);
+    border-color: var(--color-blue);
+    color: var(--color-blue);
   }
   
   /* Responsive */

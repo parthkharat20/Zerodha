@@ -1,0 +1,140 @@
+/* Stock Chart - Zerodha Theme */
+.stock-chart-container {
+    background: white;
+    border: 1px solid rgb(235, 234, 234);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgb(235, 234, 234);
+  }
+  
+  .chart-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .chart-title h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+    margin: 0;
+  }
+  
+  .chart-stats {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  
+  .stat-item.profit {
+    background: rgba(72, 194, 55, 0.1);
+    color: rgb(72, 194, 55);
+  }
+  
+  .stat-item.loss {
+    background: rgba(250, 118, 78, 0.1);
+    color: rgb(250, 118, 78);
+  }
+  
+  /* Price Stats */
+  .price-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    padding: 15px;
+    background: rgb(248, 249, 250);
+    border-radius: 6px;
+  }
+  
+  .price-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .price-stat .stat-label {
+    font-size: 0.7rem;
+    color: rgb(136, 136, 136);
+    font-weight: 500;
+  }
+  
+  .price-stat .stat-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+  }
+  
+  .price-stat .stat-value.profit {
+    color: rgb(72, 194, 55);
+  }
+  
+  .price-stat .stat-value.loss {
+    color: rgb(250, 118, 78);
+  }
+  
+  /* Timeframe Selector */
+  .timeframe-selector {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .tf-btn {
+    padding: 6px 14px;
+    border: 1px solid rgb(224, 224, 224);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgb(136, 136, 136);
+    transition: all 0.2s;
+  }
+  
+  .tf-btn:hover {
+    background: rgb(248, 249, 250);
+  }
+  
+  .tf-btn.active {
+    background: rgb(65, 132, 243);
+    color: white;
+    border-color: rgb(65, 132, 243);
+  }
+  
+  /* Chart Wrapper */
+  .chart-wrapper {
+    height: 400px;
+    position: relative;
+  }
+  
+  .chart-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 15px;
+  }
+  
+  .chart-loading p {
+    color: rgb(136, 136, 136);
+    font-size: 0.85rem;
+  }

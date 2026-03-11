@@ -1,0 +1,142 @@
+/* Portfolio Insights - Dark Theme */
+.portfolio-insights-page {
+    padding: 20px;
+  }
+  
+  .insights-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 20px;
+  }
+  
+  .insights-loading p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  
+  .insights-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .insights-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .insight-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    border-left: 4px solid;
+    transition: all 0.3s;
+  }
+  
+  .insight-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .insight-card.success {
+    border-left-color: var(--color-profit);
+  }
+  
+  .insight-card.error {
+    border-left-color: var(--color-loss);
+  }
+  
+  .insight-card.warning {
+    border-left-color: #ff9800;
+  }
+  
+  .insight-card.info {
+    border-left-color: var(--color-blue);
+  }
+  
+  .insight-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .insight-card.success .insight-icon {
+    background: rgba(38, 166, 154, 0.2);
+    color: var(--color-profit);
+  }
+  
+  .insight-card.error .insight-icon {
+    background: rgba(239, 83, 80, 0.2);
+    color: var(--color-loss);
+  }
+  
+  .insight-card.warning .insight-icon {
+    background: rgba(255, 152, 0, 0.2);
+    color: #ff9800;
+  }
+  
+  .insight-card.info .insight-icon {
+    background: rgba(41, 98, 255, 0.2);
+    color: var(--color-blue);
+  }
+  
+  .insight-content {
+    flex: 1;
+  }
+  
+  .insight-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+  }
+  
+  .insight-content p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+  }
+  
+  .no-data p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 20px 0;
+  }
+  
+  @media (max-width: 768px) {
+    .insights-grid {
+      grid-template-columns: 1fr;
+    }
+  }

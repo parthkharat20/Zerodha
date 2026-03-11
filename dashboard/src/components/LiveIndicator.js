@@ -1,38 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./LiveIndicator.css";
 
-const LiveIndicator = ({ isActive = true, lastUpdated = null }) => {
-  const [pulse, setPulse] = useState(true);
-
-  useEffect(() => {
-    if (isActive) {
-      const interval = setInterval(() => {
-        setPulse(prev => !prev);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [isActive]);
-
-  const formatTime = (date) => {
-    if (!date) return '';
-    return date.toLocaleTimeString('en-IN', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
-    });
+const LiveIndicator = ({ isActive, lastUpdated }) => {
+  const getTimeAgo = () => {
+    if (!lastUpdated) return "Never";
+    
+    const seconds = Math.floor((new Date() - new Date(lastUpdated)) / 1000);
+    
+    if (seconds < 10) return "Just now";
+    if (seconds < 60) return `${seconds}s ago`;
+    
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    return `${hours}h ago`;
   };
 
   return (
-    <div className="live-indicator-wrapper">
-      <div className={`live-status ${isActive ? 'active' : 'inactive'} ${pulse ? 'pulse' : ''}`}>
-        <span className="live-dot"></span>
-        <span className="live-label">LIVE</span>
+    <div className="live-indicator-container">
+      <div className={`live-dot ${isActive ? 'active' : 'paused'}`}></div>
+      <div className="live-text">
+        <span className="live-status">{isActive ? 'LIVE' : 'PAUSED'}</span>
+        <span className="live-time">{getTimeAgo()}</span>
       </div>
-      {lastUpdated && (
-        <span className="update-time">
-          {formatTime(lastUpdated)}
-        </span>
-      )}
     </div>
   );
 };

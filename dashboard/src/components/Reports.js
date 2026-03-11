@@ -8,14 +8,17 @@ import {
   TableChart,
   Assessment,
   DateRange,
+  Refresh,
 } from "@mui/icons-material";
+import { fetchMultipleStocks } from "../services/stockAPI";
 import "./Reports.css";
 
 const Reports = () => {
-  const [reportType, setReportType] = useState("pnl"); // pnl, tax, transaction
+  const [reportType, setReportType] = useState("pnl");
   const [dateRange, setDateRange] = useState("1M");
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [livePositions, setLivePositions] = useState([]);
 
   useEffect(() => {
     fetchReportData();
@@ -25,8 +28,9 @@ const Reports = () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
+    setLoading(true);
     try {
-      const [statsRes, ordersRes, positionsRes] = await Promise.all([
+      const [statsRes, ordersRes, positionsRes, holdingsRes] = await Promise.all([
         axios.get("http://localhost:3002/dashboard/stats", {
           headers: { Authorization: `Bearer ${token}` },
         }),
@@ -36,12 +40,33 @@ const Reports = () => {
         axios.get("http://localhost:3002/allPositions", {
           headers: { Authorization: `Bearer ${token}` },
         }),
+        axios.get("http://localhost:3002/allHoldings", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ]);
+
+      // Fetch live prices for positions
+      const positions = positionsRes.data;
+      if (positions.length > 0) {
+        const symbols = positions.map(p => p.name);
+        const priceData = await fetchMultipleStocks(symbols);
+        
+        const updatedPositions = positions.map(position => {
+          const liveData = priceData.find(p => p.symbol === position.name);
+          return {
+            ...position,
+            price: liveData ? liveData.price : position.price,
+          };
+        });
+        
+        setLivePositions(updatedPositions);
+      }
 
       setReportData({
         stats: statsRes.data,
         orders: ordersRes.data,
-        positions: positionsRes.data,
+        positions: positions,
+        holdings: holdingsRes.data,
       });
       setLoading(false);
     } catch (err) {
@@ -70,16 +95,43 @@ const Reports = () => {
     return (
       <div className="reports-loading">
         <div className="loading-spinner"></div>
-        <p>Generating report...</p>
+        <p>Generating report with live data...</p>
       </div>
     );
   }
+
+  // Calculate real P&L from live positions
+  const calculateRealPnL = () => {
+    const positions = livePositions.length > 0 ? livePositions : reportData?.positions || [];
+    
+    const realizedPnL = reportData?.stats?.totalPnL || 0;
+    const unrealizedPnL = positions.reduce((sum, pos) => {
+      const pnl = (pos.price - pos.avg) * pos.qty;
+      return sum + pnl;
+    }, 0);
+    
+    const totalCharges = 1234.50; // Mock charges
+    const netPnL = realizedPnL + unrealizedPnL - totalCharges;
+
+    return {
+      realized: realizedPnL,
+      unrealized: unrealizedPnL,
+      totalCharges,
+      net: netPnL,
+    };
+  };
+
+  const pnlData = calculateRealPnL();
 
   return (
     <div className="reports-page">
       <div className="reports-header">
         <h2>Reports & Analytics</h2>
         <div className="header-actions">
+          <button className="btn btn-grey" onClick={fetchReportData}>
+            <Refresh style={{ fontSize: "1rem" }} />
+            Refresh
+          </button>
           <button className="btn btn-grey" onClick={handlePrint}>
             <Print style={{ fontSize: "1rem" }} />
             Print
@@ -142,62 +194,75 @@ const Reports = () => {
       {reportType === "pnl" && (
         <div className="report-content">
           <div className="report-summary">
-            <h3>Profit & Loss Summary</h3>
+            <h3>Profit & Loss Summary (LIVE)</h3>
             <div className="summary-cards">
-              <div className="summary-card profit">
+              <div className={`summary-card ${pnlData.realized >= 0 ? 'profit' : 'loss'}`}>
                 <span className="card-label">Realized P&L</span>
                 <span className="card-value">
-                  +₹{reportData?.stats?.totalPnL?.toFixed(2) || "0.00"}
+                  {pnlData.realized >= 0 ? '+' : ''}₹{pnlData.realized.toFixed(2)}
                 </span>
               </div>
-              <div className="summary-card">
+              <div className={`summary-card ${pnlData.unrealized >= 0 ? 'profit' : 'loss'}`}>
                 <span className="card-label">Unrealized P&L</span>
                 <span className="card-value">
-                  +₹{(reportData?.stats?.todayPnL || 0).toFixed(2)}
+                  {pnlData.unrealized >= 0 ? '+' : ''}₹{pnlData.unrealized.toFixed(2)}
                 </span>
               </div>
               <div className="summary-card">
                 <span className="card-label">Total Charges</span>
-                <span className="card-value">₹1,234.50</span>
+                <span className="card-value">₹{pnlData.totalCharges.toFixed(2)}</span>
               </div>
-              <div className="summary-card profit">
+              <div className={`summary-card ${pnlData.net >= 0 ? 'profit' : 'loss'}`}>
                 <span className="card-label">Net P&L</span>
                 <span className="card-value">
-                  +₹{(reportData?.stats?.totalPnL - 1234.5 || 0).toFixed(2)}
+                  {pnlData.net >= 0 ? '+' : ''}₹{pnlData.net.toFixed(2)}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Stock-wise P&L */}
+          {/* Stock-wise P&L with LIVE prices */}
           <div className="report-table">
-            <h3>Stock-wise P&L</h3>
+            <h3>Stock-wise P&L (Live Prices)</h3>
             <table>
               <thead>
                 <tr>
                   <th>Stock</th>
                   <th>Qty</th>
                   <th>Buy Avg</th>
-                  <th>Sell Avg</th>
+                  <th>Current Price</th>
                   <th>P&L</th>
                   <th>P&L %</th>
                 </tr>
               </thead>
               <tbody>
-                {reportData?.positions?.map((pos, i) => {
+                {(livePositions.length > 0 ? livePositions : reportData?.positions || []).map((pos, i) => {
                   const pnl = (pos.price - pos.avg) * pos.qty;
                   const pnlPercent = ((pnl / (pos.avg * pos.qty)) * 100).toFixed(2);
                   return (
                     <tr key={i}>
-                      <td className="stock-name">{pos.name}</td>
+                      <td className="stock-name">
+                        {pos.name}
+                        <span style={{
+                          marginLeft: '8px',
+                          fontSize: '0.65rem',
+                          color: 'rgb(72, 194, 55)',
+                          background: 'rgba(72, 194, 55, 0.1)',
+                          padding: '2px 6px',
+                          borderRadius: '3px',
+                          fontWeight: '600'
+                        }}>
+                          LIVE
+                        </span>
+                      </td>
                       <td>{pos.qty}</td>
                       <td>₹{pos.avg.toFixed(2)}</td>
                       <td>₹{pos.price.toFixed(2)}</td>
                       <td className={pnl >= 0 ? "profit" : "loss"}>
-                        {pnl >= 0 ? "+" : ""}₹{pnl.toFixed(2)}
+                        {pnl >= 0 ? '+' : ''}₹{pnl.toFixed(2)}
                       </td>
-                      <td className={pnl >= 0 ? "profit" : "loss"}>
-                        {pnlPercent >= 0 ? "+" : ""}
+                      <td className={parseFloat(pnlPercent) >= 0 ? "profit" : "loss"}>
+                        {parseFloat(pnlPercent) >= 0 ? '+' : ''}
                         {pnlPercent}%
                       </td>
                     </tr>

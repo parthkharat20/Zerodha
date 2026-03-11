@@ -1,0 +1,236 @@
+/* Price Alerts - Zerodha Theme */
+.price-alerts-page {
+    padding: 20px;
+    min-height: calc(100vh - 10vh - 60px);
+  }
+  
+  .alerts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .alerts-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Summary */
+  .alerts-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .summary-item {
+    background: white;
+    border: 1px solid rgb(235, 234, 234);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .summary-label {
+    font-size: 0.8rem;
+    color: rgb(136, 136, 136);
+    font-weight: 500;
+  }
+  
+  .summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(71, 71, 71);
+  }
+  
+  .summary-value.success {
+    color: rgb(72, 194, 55);
+  }
+  
+  .summary-value.danger {
+    color: rgb(250, 118, 78);
+  }
+  
+  /* Alerts List */
+  .alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .no-alerts {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border: 1px solid rgb(235, 234, 234);
+    border-radius: 8px;
+  }
+  
+  .no-alerts p {
+    color: rgb(136, 136, 136);
+    font-size: 1rem;
+    margin: 20px 0;
+  }
+  
+  /* Alert Card */
+  .alert-card {
+    background: white;
+    border: 1px solid rgb(235, 234, 234);
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+  
+  .alert-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgb(243, 242, 242);
+  }
+  
+  .alert-stock {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .alert-stock h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+    margin: 0;
+  }
+  
+  .condition-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  
+  .condition-badge.above {
+    background: rgba(72, 194, 55, 0.1);
+    color: rgb(72, 194, 55);
+  }
+  
+  .condition-badge.below {
+    background: rgba(250, 118, 78, 0.1);
+    color: rgb(250, 118, 78);
+  }
+  
+  .delete-btn {
+    background: transparent;
+    border: 1px solid rgb(224, 224, 224);
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: rgb(136, 136, 136);
+    transition: all 0.2s;
+  }
+  
+  .delete-btn:hover {
+    border-color: rgb(250, 118, 78);
+    color: rgb(250, 118, 78);
+  }
+  
+  .alert-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .alert-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .info-label {
+    font-size: 0.75rem;
+    color: rgb(136, 136, 136);
+  }
+  
+  .info-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+  }
+  
+  .alert-date {
+    font-size: 0.75rem;
+    color: rgb(153, 153, 153);
+  }
+  
+  /* Modal */
+  .alert-modal {
+    max-width: 500px;
+    width: 90%;
+  }
+  
+  .condition-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .condition-buttons button {
+    padding: 12px;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  
+  .condition-buttons button.above.active {
+    background: rgba(72, 194, 55, 0.1);
+    border-color: rgb(72, 194, 55);
+    color: rgb(72, 194, 55);
+  }
+  
+  .condition-buttons button.below.active {
+    background: rgba(250, 118, 78, 0.1);
+    border-color: rgb(250, 118, 78);
+    color: rgb(250, 118, 78);
+  }
+  
+  .alert-preview {
+    background: rgba(65, 132, 243, 0.08);
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: rgb(71, 71, 71);
+  }
+  
+  .alert-preview strong {
+    color: rgb(65, 132, 243);
+  }

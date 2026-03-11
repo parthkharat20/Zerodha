@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Calculate, TrendingUp, TrendingDown, Info } from "@mui/icons-material";
+import { Calculate, TrendingUp, TrendingDown, Info, Refresh } from "@mui/icons-material";
+import { fetchStockPrice } from "../services/stockAPI";
 import "./TradeCalculator.css";
 
 const TradeCalculator = () => {
@@ -16,6 +17,7 @@ const TradeCalculator = () => {
     stopLoss: 0,
   });
   const [result, setResult] = useState(null);
+  const [fetchingPrice, setFetchingPrice] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -42,6 +44,27 @@ const TradeCalculator = () => {
     }
   };
 
+  const fetchLivePrice = async () => {
+    if (!calc.stock) {
+      alert("Please enter stock symbol first!");
+      return;
+    }
+
+    setFetchingPrice(true);
+    try {
+      const priceData = await fetchStockPrice(calc.stock.toUpperCase());
+      setCalc({
+        ...calc,
+        buyPrice: priceData.price,
+        sellPrice: priceData.price,
+      });
+    } catch (err) {
+      alert("Error fetching live price. Please enter manually.");
+    } finally {
+      setFetchingPrice(false);
+    }
+  };
+
   const handleCalculate = () => {
     if (calc.tradeType === "BUY") {
       calculateBuy();
@@ -61,11 +84,18 @@ const TradeCalculator = () => {
     const targetProfitPercent = ((targetProfit / investment) * 100).toFixed(2);
     const stopLossPercent = ((stopLossLoss / investment) * 100).toFixed(2);
 
-    const brokerage = investment * 0.0003; // 0.03% brokerage
+    // Real brokerage calculation
+    const brokerage = Math.min(investment * 0.0003, 20); // 0.03% or ₹20 whichever is lower
     const stt = investment * 0.001; // 0.1% STT
-    const totalCharges = brokerage + stt;
+    const exchangeTxn = investment * 0.0000345; // NSE txn charges
+    const gst = (brokerage + exchangeTxn) * 0.18; // 18% GST
+    const sebiCharges = investment * 0.000001; // SEBI charges
+    const stampDuty = investment * 0.00003; // 0.003% stamp duty
+    
+    const totalCharges = brokerage + stt + exchangeTxn + gst + sebiCharges + stampDuty;
 
     const canAfford = funds && investment <= funds.availableBalance;
+    const breakEven = calc.buyPrice + (totalCharges / calc.quantity);
 
     setResult({
       type: "BUY",
@@ -76,11 +106,17 @@ const TradeCalculator = () => {
       stopLossPercent,
       brokerage: brokerage.toFixed(2),
       stt: stt.toFixed(2),
+      exchangeTxn: exchangeTxn.toFixed(2),
+      gst: gst.toFixed(2),
+      sebiCharges: sebiCharges.toFixed(2),
+      stampDuty: stampDuty.toFixed(2),
       totalCharges: totalCharges.toFixed(2),
-      netProfit: (targetProfit - totalCharges).toFixed(2),
+      netTargetProfit: (targetProfit - totalCharges).toFixed(2),
+      netStopLoss: (stopLossLoss - totalCharges).toFixed(2),
       canAfford,
       required: investment.toFixed(2),
       available: funds?.availableBalance.toFixed(2),
+      breakEven: breakEven.toFixed(2),
     });
   };
 
@@ -96,9 +132,15 @@ const TradeCalculator = () => {
     const profit = saleValue - investment;
     const profitPercent = ((profit / investment) * 100).toFixed(2);
 
-    const brokerage = saleValue * 0.0003;
-    const stt = saleValue * 0.001;
-    const totalCharges = brokerage + stt;
+    // Real charges for selling
+    const brokerage = Math.min(saleValue * 0.0003, 20);
+    const stt = saleValue * 0.00025; // 0.025% for selling
+    const exchangeTxn = saleValue * 0.0000345;
+    const gst = (brokerage + exchangeTxn) * 0.18;
+    const sebiCharges = saleValue * 0.000001;
+    const stampDuty = 0; // No stamp duty on sell
+    
+    const totalCharges = brokerage + stt + exchangeTxn + gst + sebiCharges;
 
     const canSell = calc.quantity <= holding.qty;
 
@@ -110,11 +152,16 @@ const TradeCalculator = () => {
       profitPercent,
       brokerage: brokerage.toFixed(2),
       stt: stt.toFixed(2),
+      exchangeTxn: exchangeTxn.toFixed(2),
+      gst: gst.toFixed(2),
+      sebiCharges: sebiCharges.toFixed(2),
+      stampDuty: stampDuty.toFixed(2),
       totalCharges: totalCharges.toFixed(2),
       netProfit: (profit - totalCharges).toFixed(2),
       canSell,
       owned: holding.qty,
       requested: calc.quantity,
+      avgBuyPrice: holding.avg.toFixed(2),
     });
   };
 
@@ -123,7 +170,7 @@ const TradeCalculator = () => {
       <div className="calculator-header">
         <h2>
           <Calculate style={{ fontSize: "1.5rem" }} />
-          Trade Calculator
+          Advanced Trade Calculator
         </h2>
         <div className="funds-display">
           <span className="funds-label">Available:</span>
@@ -165,12 +212,19 @@ const TradeCalculator = () => {
               <label>Select Stock</label>
               <select
                 value={calc.stock}
-                onChange={(e) => setCalc({ ...calc, stock: e.target.value })}
+                onChange={(e) => {
+                  const stock = holdings.find(h => h.name === e.target.value);
+                  setCalc({ 
+                    ...calc, 
+                    stock: e.target.value,
+                    sellPrice: stock ? stock.price : 0,
+                  });
+                }}
               >
                 <option value="">Choose from holdings...</option>
                 {holdings.map((h) => (
                   <option key={h.name} value={h.name}>
-                    {h.name} (You own: {h.qty})
+                    {h.name} (You own: {h.qty} @ ₹{h.avg.toFixed(2)})
                   </option>
                 ))}
               </select>
@@ -180,13 +234,22 @@ const TradeCalculator = () => {
           {/* Stock Name for BUY */}
           {calc.tradeType === "BUY" && (
             <div className="form-group">
-              <label>Stock Name</label>
-              <input
-                type="text"
-                value={calc.stock}
-                onChange={(e) => setCalc({ ...calc, stock: e.target.value })}
-                placeholder="e.g., RELIANCE"
-              />
+              <label>Stock Symbol</label>
+              <div className="input-with-button">
+                <input
+                  type="text"
+                  value={calc.stock}
+                  onChange={(e) => setCalc({ ...calc, stock: e.target.value.toUpperCase() })}
+                  placeholder="e.g., RELIANCE"
+                />
+                <button 
+                  className="fetch-price-btn"
+                  onClick={fetchLivePrice}
+                  disabled={fetchingPrice}
+                >
+                  {fetchingPrice ? "..." : <Refresh style={{ fontSize: '1rem' }} />}
+                </button>
+              </div>
             </div>
           )}
 
@@ -261,14 +324,14 @@ const TradeCalculator = () => {
 
           <button className="btn btn-blue calculate-btn" onClick={handleCalculate}>
             <Calculate />
-            Calculate
+            Calculate with Real Charges
           </button>
         </div>
 
         {/* Result Display */}
         {result && (
           <div className="calculator-result">
-            <h3>📊 Calculation Result</h3>
+            <h3>📊 Detailed Calculation</h3>
 
             {result.type === "BUY" ? (
               <>
@@ -278,22 +341,17 @@ const TradeCalculator = () => {
                     result.canAfford ? "success" : "error"
                   }`}
                 >
-                  {result.canAfford ? (
-                    <>
-                      <Info />
-                      <span>
-                        ✅ You can afford this trade! Required: ₹{result.required}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Info />
-                      <span>
+                  <Info />
+                  <span>
+                    {result.canAfford ? (
+                      <>✅ You can afford this trade! Required: ₹{result.required}</>
+                    ) : (
+                      <>
                         ❌ Insufficient funds! Required: ₹{result.required},
                         Available: ₹{result.available}
-                      </span>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </span>
                 </div>
 
                 {/* Investment */}
@@ -302,32 +360,54 @@ const TradeCalculator = () => {
                   <span className="value">₹{result.investment.toFixed(2)}</span>
                 </div>
 
+                {/* Break Even */}
+                <div className="result-row highlight">
+                  <span>Break Even Price:</span>
+                  <span className="value">₹{result.breakEven}</span>
+                </div>
+
                 {/* Target Profit */}
                 <div className="result-row profit-row">
-                  <span>Target Profit:</span>
+                  <span>Target Profit (Before Charges):</span>
                   <span className="value profit">
-                    +₹{result.targetProfit.toFixed(2)} ({result.targetProfitPercent}
-                    %)
+                    +₹{result.targetProfit.toFixed(2)} ({result.targetProfitPercent}%)
                   </span>
                 </div>
 
                 {/* Stop Loss */}
                 <div className="result-row loss-row">
-                  <span>Stop Loss:</span>
+                  <span>Stop Loss (Before Charges):</span>
                   <span className="value loss">
                     ₹{result.stopLossLoss.toFixed(2)} ({result.stopLossPercent}%)
                   </span>
                 </div>
 
-                {/* Charges */}
+                {/* Detailed Charges */}
                 <div className="charges-section">
+                  <h4>Detailed Charges Breakdown</h4>
                   <div className="result-row">
-                    <span>Brokerage (0.03%):</span>
+                    <span>Brokerage (0.03% or ₹20):</span>
                     <span>₹{result.brokerage}</span>
                   </div>
                   <div className="result-row">
                     <span>STT (0.1%):</span>
                     <span>₹{result.stt}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>Exchange Txn Charges:</span>
+                    <span>₹{result.exchangeTxn}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>GST (18%):</span>
+                    <span>₹{result.gst}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>SEBI Charges:</span>
+                    <span>₹{result.sebiCharges}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>Stamp Duty (0.003%):</span>
+                    <span>₹{result.stampDuty}</span>
                   </div>
                   <div className="result-row total">
                     <span>Total Charges:</span>
@@ -335,10 +415,16 @@ const TradeCalculator = () => {
                   </div>
                 </div>
 
-                {/* Net Profit */}
+                {/* Net Profit/Loss */}
                 <div className="net-profit">
-                  <span>Net Profit (After Charges):</span>
-                  <span className="value profit">₹{result.netProfit}</span>
+                  <div className="net-row">
+                    <span>Net Profit at Target:</span>
+                    <span className="value profit">₹{result.netTargetProfit}</span>
+                  </div>
+                  <div className="net-row">
+                    <span>Net Loss at Stop Loss:</span>
+                    <span className="value loss">₹{result.netStopLoss}</span>
+                  </div>
                 </div>
               </>
             ) : (
@@ -349,26 +435,26 @@ const TradeCalculator = () => {
                     result.canSell ? "success" : "error"
                   }`}
                 >
-                  {result.canSell ? (
-                    <>
-                      <Info />
-                      <span>
-                        ✅ You can sell {result.requested} shares (You own:{" "}
-                        {result.owned})
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Info />
-                      <span>
-                        ❌ Insufficient quantity! You own: {result.owned}, Requested:{" "}
-                        {result.requested}
-                      </span>
-                    </>
-                  )}
+                  <Info />
+                  <span>
+                    {result.canSell ? (
+                      <>
+                        ✅ You can sell {result.requested} shares (You own: {result.owned})
+                      </>
+                    ) : (
+                      <>
+                        ❌ Insufficient quantity! You own: {result.owned}, Requested: {result.requested}
+                      </>
+                    )}
+                  </span>
                 </div>
 
-                {/* Investment */}
+                {/* Investment Info */}
+                <div className="result-row">
+                  <span>Your Avg Buy Price:</span>
+                  <span className="value">₹{result.avgBuyPrice}</span>
+                </div>
+
                 <div className="result-row">
                   <span>Your Investment:</span>
                   <span className="value">₹{result.investment.toFixed(2)}</span>
@@ -380,28 +466,40 @@ const TradeCalculator = () => {
                   <span className="value">₹{result.saleValue.toFixed(2)}</span>
                 </div>
 
-                {/* Profit/Loss */}
+                {/* Gross Profit/Loss */}
                 <div
                   className={`result-row ${
                     result.profit >= 0 ? "profit-row" : "loss-row"
                   }`}
                 >
-                  <span>Profit/Loss:</span>
+                  <span>Gross Profit/Loss:</span>
                   <span className={`value ${result.profit >= 0 ? "profit" : "loss"}`}>
-                    {result.profit >= 0 ? "+" : ""}₹{result.profit.toFixed(2)} (
-                    {result.profitPercent}%)
+                    {result.profit >= 0 ? "+" : ""}₹{result.profit.toFixed(2)} ({result.profitPercent}%)
                   </span>
                 </div>
 
-                {/* Charges */}
+                {/* Detailed Charges */}
                 <div className="charges-section">
+                  <h4>Detailed Charges Breakdown</h4>
                   <div className="result-row">
-                    <span>Brokerage (0.03%):</span>
+                    <span>Brokerage (0.03% or ₹20):</span>
                     <span>₹{result.brokerage}</span>
                   </div>
                   <div className="result-row">
-                    <span>STT (0.1%):</span>
+                    <span>STT (0.025% on sell):</span>
                     <span>₹{result.stt}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>Exchange Txn Charges:</span>
+                    <span>₹{result.exchangeTxn}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>GST (18%):</span>
+                    <span>₹{result.gst}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>SEBI Charges:</span>
+                    <span>₹{result.sebiCharges}</span>
                   </div>
                   <div className="result-row total">
                     <span>Total Charges:</span>
@@ -411,7 +509,7 @@ const TradeCalculator = () => {
 
                 {/* Net Profit */}
                 <div className="net-profit">
-                  <span>Net Profit (After Charges):</span>
+                  <span>Net Profit (After All Charges):</span>
                   <span
                     className={`value ${
                       parseFloat(result.netProfit) >= 0 ? "profit" : "loss"

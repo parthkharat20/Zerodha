@@ -17,7 +17,9 @@ import Reports from "./Reports";
 import StockCompare from "./StockCompare";
 import TradeCalculator from "./TradeCalculator";
 import TradingJournal from "./TradingJournal";
+import PriceAlerts from "./PriceAlerts";
 import QuickActions from "./QuickActions";
+import PortfolioInsights from "./PortfolioInsights";
 import { GeneralContextProvider } from "./GeneralContext";
 
 const Dashboard = () => {
@@ -32,7 +34,7 @@ const Dashboard = () => {
             <Route path="holdings" element={<Holdings />} />
             <Route path="positions" element={<Positions />} />
             <Route path="funds" element={<Funds />} />
-            <Route path="alerts" element={<Alerts />} />
+            <Route path="alerts" element={<PriceAlerts />} />
             <Route path="apps" element={<Apps />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
@@ -42,6 +44,7 @@ const Dashboard = () => {
             <Route path="compare" element={<StockCompare />} />
             <Route path="calculator" element={<TradeCalculator />} />
             <Route path="journal" element={<TradingJournal />} />
+            <Route path="insights" element={<PortfolioInsights />} />
           </Routes>
         </div>
 

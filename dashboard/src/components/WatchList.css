@@ -1,9 +1,9 @@
-/* Enhanced Watchlist - Zerodha Theme */
+/* Dark Watchlist - Professional Trading Theme */
 .watchlist-container {
     flex-basis: 32%;
     height: 100%;
-    background: white;
-    border-right: 1px solid rgb(235, 234, 234);
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-primary);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -15,9 +15,9 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding: 12px 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
     color: white;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
   }
   
   .portfolio-item {
@@ -27,11 +27,11 @@
   }
   
   .portfolio-item.profit .portfolio-value {
-    color: #4caf50;
+    color: var(--color-profit);
   }
   
   .portfolio-item.loss .portfolio-value {
-    color: #ff5252;
+    color: var(--color-loss);
   }
   
   .portfolio-label {
@@ -47,17 +47,17 @@
   /* Header */
   .watchlist-header {
     padding: 12px 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgb(248, 249, 250);
+    background: var(--bg-card);
   }
   
   .watchlist-title {
     font-size: 0.95rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
@@ -68,60 +68,68 @@
   }
   
   .icon-btn {
-    background: white;
-    border: 1px solid rgb(224, 224, 224);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     padding: 4px 6px;
     border-radius: 4px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     transition: all 0.2s;
   }
   
   .icon-btn:hover {
-    background: rgb(248, 249, 250);
-    color: rgb(65, 132, 243);
+    background: var(--bg-hover);
+    color: var(--color-blue);
+    border-color: var(--color-blue);
   }
   
   .stock-count {
     font-size: 0.75rem;
-    color: rgb(136, 136, 136);
-    background: white;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
     padding: 4px 8px;
     border-radius: 10px;
-    border: 1px solid rgb(224, 224, 224);
+    border: 1px solid var(--border-primary);
   }
   
   /* Search */
   .search-container {
     position: relative;
     padding: 10px 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
     display: flex;
     align-items: center;
+    background: var(--bg-card);
   }
   
   .search-icon {
     position: absolute;
     left: 25px;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-size: 1rem;
   }
   
   .search {
     width: 100%;
     padding: 8px 35px 8px 35px;
-    border: 1px solid rgb(224, 224, 224);
+    border: 1px solid var(--border-primary);
     border-radius: 6px;
     font-size: 0.8rem;
     box-sizing: border-box;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
   }
   
   .search:focus {
     outline: none;
-    border-color: rgb(65, 132, 243);
-    box-shadow: 0 0 0 3px rgba(65, 132, 243, 0.1);
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+  }
+  
+  .search::placeholder {
+    color: var(--text-disabled);
   }
   
   .clear-search {
@@ -130,18 +138,22 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     padding: 4px;
+  }
+  
+  .clear-search:hover {
+    color: var(--text-primary);
   }
   
   /* Controls */
   .watchlist-controls {
     padding: 8px 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
+    background: var(--bg-secondary);
   }
   
   .control-btns {
@@ -150,26 +162,26 @@
   }
   
   .control-btn {
-    background: white;
-    border: 1px solid rgb(224, 224, 224);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
-    color: rgb(70, 70, 70);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     transition: all 0.2s;
   }
   
   .control-btn:hover {
-    background: rgb(248, 249, 250);
-    border-color: rgb(65, 132, 243);
+    background: var(--bg-hover);
+    border-color: var(--color-blue);
   }
   
   .control-btn.paused {
-    color: rgb(250, 118, 78);
-    border-color: rgb(250, 118, 78);
+    color: var(--color-loss);
+    border-color: var(--color-loss);
   }
   
   /* Market Stats */
@@ -178,8 +190,8 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
     padding: 10px 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
-    background: white;
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--bg-secondary);
   }
   
   .stat-box {
@@ -189,21 +201,32 @@
     padding: 8px;
     border-radius: 6px;
     font-size: 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
   }
   
   .stat-box.gainers {
-    background: rgba(72, 194, 55, 0.08);
-    color: rgb(72, 194, 55);
+    border-color: var(--color-profit);
+  }
+  
+  .stat-box.gainers svg {
+    color: var(--color-profit);
   }
   
   .stat-box.losers {
-    background: rgba(250, 118, 78, 0.08);
-    color: rgb(250, 118, 78);
+    border-color: var(--color-loss);
+  }
+  
+  .stat-box.losers svg {
+    color: var(--color-loss);
   }
   
   .stat-box.volume {
-    background: rgba(65, 132, 243, 0.08);
-    color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
+  }
+  
+  .stat-box.volume svg {
+    color: var(--color-blue);
   }
   
   .stat-box div {
@@ -215,11 +238,12 @@
   .stat-value {
     font-size: 0.85rem;
     font-weight: 700;
+    color: var(--text-primary);
   }
   
   .stat-label {
     font-size: 0.65rem;
-    opacity: 0.8;
+    color: var(--text-secondary);
   }
   
   /* Sort Tabs */
@@ -227,31 +251,31 @@
     display: flex;
     gap: 6px;
     padding: 8px 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
-    background: white;
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--bg-secondary);
   }
   
   .tab {
     flex: 1;
     padding: 6px 8px;
-    border: 1px solid rgb(224, 224, 224);
-    background: white;
+    border: 1px solid var(--border-primary);
+    background: var(--bg-card);
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.75rem;
-    color: rgb(70, 70, 70);
+    color: var(--text-primary);
     transition: all 0.2s;
     font-weight: 500;
   }
   
   .tab:hover {
-    background: rgb(248, 249, 250);
+    background: var(--bg-hover);
   }
   
   .tab.active {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
     color: white;
-    border-color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
   }
   
   /* Stock List */
@@ -261,36 +285,27 @@
     margin: 0;
     flex: 1;
     overflow-y: auto;
+    background: var(--bg-secondary);
   }
   
   .stock-item {
     padding: 10px 15px;
-    border-bottom: 1px solid rgb(243, 242, 242);
+    border-bottom: 1px solid var(--border-primary);
     cursor: pointer;
     position: relative;
     transition: background 0.2s;
   }
   
   .stock-item:hover {
-    background: rgb(248, 249, 250);
+    background: var(--bg-hover);
   }
   
   .stock-item.flash-up {
-    animation: flash-green 0.6s ease;
+    animation: flash-green-dark 0.6s ease;
   }
   
   .stock-item.flash-down {
-    animation: flash-red 0.6s ease;
-  }
-  
-  @keyframes flash-green {
-    0%, 100% { background: white; }
-    50% { background: rgba(72, 194, 55, 0.1); }
-  }
-  
-  @keyframes flash-red {
-    0%, 100% { background: white; }
-    50% { background: rgba(250, 118, 78, 0.1); }
+    animation: flash-red-dark 0.6s ease;
   }
   
   .stock-content {
@@ -314,6 +329,10 @@
     align-items: center;
   }
   
+  .favorite-btn svg {
+    color: var(--text-secondary);
+  }
+  
   .stock-info {
     display: flex;
     flex-direction: column;
@@ -323,13 +342,13 @@
   .stock-name {
     font-size: 0.85rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
   .stock-exchange {
     font-size: 0.65rem;
-    color: rgb(153, 153, 153);
+    color: var(--text-secondary);
     margin: 0;
   }
   
@@ -347,11 +366,11 @@
   }
   
   .stock-price.up {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .stock-price.down {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   .stock-change {
@@ -364,11 +383,11 @@
   }
   
   .stock-change.up {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .stock-change.down {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* Stock Actions */
@@ -379,15 +398,16 @@
     transform: translateY(-50%);
     display: flex;
     gap: 5px;
-    background: white;
+    background: var(--bg-elevated);
     padding: 4px;
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-primary);
   }
   
   .action-btn {
-    background: white;
-    border: 1px solid rgb(224, 224, 224);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     padding: 5px 8px;
     border-radius: 4px;
     cursor: pointer;
@@ -395,6 +415,7 @@
     font-weight: 700;
     min-width: 24px;
     transition: all 0.2s;
+    color: var(--text-primary);
   }
   
   .action-btn:hover {
@@ -402,15 +423,15 @@
   }
   
   .action-btn.buy-btn {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
     color: white;
-    border-color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
   }
   
   .action-btn.sell-btn {
-    background: rgb(255, 87, 34);
+    background: var(--color-loss);
     color: white;
-    border-color: rgb(255, 87, 34);
+    border-color: var(--color-loss);
   }
   
   .action-btn.chart-btn {
@@ -420,8 +441,8 @@
   /* Market Movers */
   .market-movers {
     padding: 15px;
-    border-top: 1px solid rgb(235, 234, 234);
-    background: rgb(248, 249, 250);
+    border-top: 1px solid var(--border-primary);
+    background: var(--bg-card);
     display: grid;
     gap: 15px;
   }
@@ -429,7 +450,7 @@
   .movers-section h4 {
     font-size: 0.8rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 8px 0;
   }
   
@@ -441,7 +462,7 @@
   }
   
   .mover-name {
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     font-weight: 500;
   }
   
@@ -450,30 +471,30 @@
   }
   
   .mover-change.up {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .mover-change.down {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* Quick Tips */
   .quick-tips {
     padding: 12px 15px;
-    background: linear-gradient(135deg, rgba(65, 132, 243, 0.08) 0%, rgba(65, 132, 243, 0.12) 100%);
-    border-top: 1px solid rgb(235, 234, 234);
+    background: linear-gradient(135deg, rgba(41, 98, 255, 0.15) 0%, rgba(41, 98, 255, 0.05) 100%);
+    border-top: 1px solid var(--border-primary);
   }
   
   .quick-tips h4 {
     font-size: 0.8rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 6px 0;
   }
   
   .quick-tips p {
     font-size: 0.75rem;
-    color: rgb(71, 71, 71);
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.4;
   }
@@ -485,7 +506,7 @@
   }
   
   .no-results p {
-    color: rgb(153, 153, 153);
+    color: var(--text-secondary);
     font-size: 0.85rem;
   }
   
@@ -497,11 +518,11 @@
   
   .watchlist-container::-webkit-scrollbar-track,
   .stock-list::-webkit-scrollbar-track {
-    background: rgb(248, 249, 250);
+    background: var(--bg-secondary);
   }
   
   .watchlist-container::-webkit-scrollbar-thumb,
   .stock-list::-webkit-scrollbar-thumb {
-    background: rgb(224, 224, 224);
+    background: var(--bg-elevated);
     border-radius: 3px;
   }

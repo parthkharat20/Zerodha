@@ -2,54 +2,97 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { VerticalGraph } from "./VerticalGraph";
 import LiveIndicator from "./LiveIndicator";
-import { updateStockPrice } from "../utils/priceSimulator";
+import { fetchMultipleStocks } from "../services/stockAPI";
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [isLive, setIsLive] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const fetchHoldings = () => {
+  useEffect(() => {
+    fetchHoldings();
+  }, []);
+
+  // Update prices every 30 seconds
+  useEffect(() => {
+    if (!isLive || allHoldings.length === 0) return;
+
+    const interval = setInterval(() => {
+      updateLivePrices();
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [isLive, allHoldings]);
+
+  const fetchHoldings = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       window.location.href = "/";
       return;
     }
 
-    axios
-      .get("http://localhost:3002/allHoldings", {
+    try {
+      const res = await axios.get("http://localhost:3002/allHoldings", {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setAllHoldings(res.data))
-      .catch((err) => {
-        if (err.response?.status === 401) {
-          localStorage.removeItem("token");
-          window.location.href = "/";
-        }
-        console.error("Error fetching holdings:", err);
       });
+      
+      const holdings = res.data;
+      if (holdings.length > 0) {
+        // Fetch real-time prices for all holdings
+        const symbols = holdings.map(h => h.name);
+        const priceData = await fetchMultipleStocks(symbols);
+        
+        const updatedHoldings = holdings.map(holding => {
+          const liveData = priceData.find(p => p.symbol === holding.name);
+          return {
+            ...holding,
+            price: liveData ? liveData.price : holding.price,
+            liveUpdate: true
+          };
+        });
+        
+        setAllHoldings(updatedHoldings);
+      } else {
+        setAllHoldings(holdings);
+      }
+      setLoading(false);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      }
+      console.error("Error fetching holdings:", err);
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
-    fetchHoldings();
-  }, []);
+  const updateLivePrices = async () => {
+    if (allHoldings.length === 0) return;
 
-  // Live price updates every 5 seconds
-  useEffect(() => {
-    if (!isLive || allHoldings.length === 0) return;
-
-    const interval = setInterval(() => {
+    try {
+      const symbols = allHoldings.map(h => h.name);
+      const priceData = await fetchMultipleStocks(symbols);
+      
       setAllHoldings(prevHoldings => {
-        return prevHoldings.map(holding => ({
-          ...holding,
-          price: updateStockPrice(holding.price)
-        }));
+        return prevHoldings.map(holding => {
+          const liveData = priceData.find(p => p.symbol === holding.name);
+          if (liveData) {
+            return {
+              ...holding,
+              price: liveData.price,
+              liveUpdate: true
+            };
+          }
+          return holding;
+        });
       });
+      
       setLastUpdated(new Date());
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isLive, allHoldings.length]);
+    } catch (err) {
+      console.error("Error updating live prices:", err);
+    }
+  };
 
   const toggleLive = () => {
     setIsLive(prev => !prev);
@@ -82,6 +125,15 @@ const Holdings = () => {
     ],
   };
 
+  if (loading) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <div className="loading-spinner"></div>
+        <p>Loading holdings with live prices...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       {/* Header with Live Indicator */}
@@ -101,13 +153,28 @@ const Holdings = () => {
               fontSize: '0.75rem',
               border: '1px solid rgb(224, 224, 224)',
               borderRadius: '2px',
-              background: 'white',
+              background: isLive ? 'white' : 'rgb(248, 249, 250)',
               cursor: 'pointer',
               color: 'rgb(70, 70, 70)',
               fontWeight: '400'
             }}
           >
-            {isLive ? 'Pause' : 'Resume'}
+            {isLive ? 'Pause Live' : 'Resume Live'}
+          </button>
+          <button 
+            onClick={updateLivePrices}
+            style={{
+              padding: '6px 12px',
+              fontSize: '0.75rem',
+              border: '1px solid rgb(65, 132, 243)',
+              borderRadius: '2px',
+              background: 'rgb(65, 132, 243)',
+              cursor: 'pointer',
+              color: 'white',
+              fontWeight: '500'
+            }}
+          >
+            🔄 Refresh
           </button>
         </div>
       </div>
@@ -133,7 +200,7 @@ const Holdings = () => {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '0.75rem', color: 'rgb(145, 145, 145)', marginBottom: '4px' }}>
-              Current Value
+              Current Value (LIVE)
             </div>
             <div style={{ fontSize: '1.2rem', fontWeight: '500', color: 'rgb(71, 71, 71)' }}>
               ₹{totalCurrentValue.toFixed(2)}
@@ -167,7 +234,7 @@ const Holdings = () => {
                   <th>Instrument</th>
                   <th>Qty.</th>
                   <th>Avg. cost</th>
-                  <th>LTP</th>
+                  <th>LTP (Live)</th>
                   <th>Cur. val</th>
                   <th>P&amp;L</th>
                   <th>Net chg.</th>
@@ -183,16 +250,33 @@ const Holdings = () => {
 
                   return (
                     <tr key={index}>
-                      <td style={{ fontWeight: '500' }}>{stock.name}</td>
-                      <td>{stock.qty}</td>
-                      <td>{stock.avg.toFixed(2)}</td>
-                      <td className="value-updating">{stock.price.toFixed(2)}</td>
-                      <td className="value-updating">{curValue.toFixed(2)}</td>
-                      <td className={`${profClass} value-updating`}>
-                        {pnl.toFixed(2)}
+                      <td style={{ fontWeight: '500' }}>
+                        {stock.name}
+                        {stock.liveUpdate && (
+                          <span style={{
+                            marginLeft: '6px',
+                            fontSize: '0.65rem',
+                            color: 'rgb(72, 194, 55)',
+                            background: 'rgba(72, 194, 55, 0.1)',
+                            padding: '2px 6px',
+                            borderRadius: '3px',
+                            fontWeight: '600'
+                          }}>
+                            LIVE
+                          </span>
+                        )}
                       </td>
-                      <td className={profClass}>{netChange.toFixed(2)}%</td>
-                      <td className={profClass}>{netChange.toFixed(2)}%</td>
+                      <td>{stock.qty}</td>
+                      <td>₹{stock.avg.toFixed(2)}</td>
+                      <td className="value-updating" style={{ fontWeight: '600' }}>
+                        ₹{stock.price.toFixed(2)}
+                      </td>
+                      <td className="value-updating">₹{curValue.toFixed(2)}</td>
+                      <td className={`${profClass} value-updating`}>
+                        {pnl >= 0 ? '+' : ''}₹{pnl.toFixed(2)}
+                      </td>
+                      <td className={profClass}>{netChange >= 0 ? '+' : ''}{netChange.toFixed(2)}%</td>
+                      <td className={profClass}>{netChange >= 0 ? '+' : ''}{netChange.toFixed(2)}%</td>
                     </tr>
                   );
                 })}

@@ -1,4 +1,4 @@
-/* Portfolio Analytics - Zerodha Theme */
+/* Portfolio Analytics - Dark Theme */
 .portfolio-page {
     padding: 20px;
   }
@@ -13,7 +13,7 @@
   .portfolio-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
@@ -33,7 +33,7 @@
   }
   
   .portfolio-loading p {
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-size: 0.95rem;
   }
   
@@ -46,8 +46,8 @@
   }
   
   .metric-card {
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 20px;
     display: flex;
@@ -74,22 +74,22 @@
   
   .metric-label {
     font-size: 0.8rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-weight: 500;
   }
   
   .metric-value {
     font-size: 1.3rem;
     font-weight: 700;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
   }
   
   .metric-value.profit {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .metric-value.loss {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* Timeframe Selector */
@@ -97,38 +97,38 @@
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
-    background: white;
+    background: var(--bg-card);
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid rgb(235, 234, 234);
+    border: 1px solid var(--border-primary);
   }
   
   .tf-btn {
     padding: 8px 16px;
-    border: 1px solid rgb(224, 224, 224);
-    background: white;
+    border: 1px solid var(--border-primary);
+    background: var(--bg-secondary);
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 600;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     transition: all 0.2s;
   }
   
   .tf-btn:hover {
-    background: rgb(248, 249, 250);
+    background: var(--bg-hover);
   }
   
   .tf-btn.active {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
     color: white;
-    border-color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
   }
   
   /* Chart Section */
   .chart-section {
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
@@ -140,13 +140,13 @@
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
   }
   
   .chart-header h3 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
     display: flex;
     align-items: center;
@@ -160,24 +160,24 @@
   
   .chart-type-selector button {
     padding: 6px 12px;
-    border: 1px solid rgb(224, 224, 224);
-    background: white;
+    border: 1px solid var(--border-primary);
+    background: var(--bg-secondary);
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
     font-weight: 500;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     transition: all 0.2s;
   }
   
   .chart-type-selector button:hover {
-    background: rgb(248, 249, 250);
+    background: var(--bg-hover);
   }
   
   .chart-type-selector button.active {
-    background: rgb(65, 132, 243);
+    background: var(--color-blue);
     color: white;
-    border-color: rgb(65, 132, 243);
+    border-color: var(--color-blue);
   }
   
   .chart-container {
@@ -199,8 +199,8 @@
   
   /* Performance Summary */
   .performance-summary {
-    background: white;
-    border: 1px solid rgb(235, 234, 234);
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 20px;
   }
@@ -208,10 +208,10 @@
   .performance-summary h3 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 20px 0;
     padding-bottom: 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
   }
   
   .summary-grid {
@@ -228,22 +228,22 @@
   
   .summary-label {
     font-size: 0.8rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     font-weight: 500;
   }
   
   .summary-value {
     font-size: 1.1rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
   }
   
   .summary-value.profit {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .summary-value.loss {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* Responsive */

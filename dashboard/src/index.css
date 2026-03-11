@@ -1,32 +1,66 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
+/* ============================================ */
+/* PROFESSIONAL DARK TRADING THEME             */
+/* ============================================ */
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  /* Dark Backgrounds */
+  --bg-primary: #0B0E11;
+  --bg-secondary: #131722;
+  --bg-card: #1E222D;
+  --bg-hover: #2A2E39;
+  --bg-elevated: #363A45;
+  
+  /* Text Colors */
+  --text-primary: #D1D4DC;
+  --text-secondary: #787B86;
+  --text-disabled: #434651;
+  
+  /* Accent Colors */
+  --color-profit: #26a69a;
+  --color-loss: #ef5350;
+  --color-blue: #2962FF;
+  --color-blue-hover: #1E53E5;
+  
+  /* Borders */
+  --border-primary: #2A2E39;
+  --border-hover: #363A45;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* ============================================ */
-/* FIXED LAYOUT - NO OVERLAP                   */
+/* LAYOUT - FIXED STRUCTURE                    */
 /* ============================================ */
 
-/* Main App Container */
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: rgb(248, 249, 250);
+  background: var(--bg-primary);
 }
 
 /* TopBar - Fixed at top */
@@ -37,12 +71,13 @@ code {
   top: 0;
   left: 0;
   z-index: 1000;
-  background: white;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
   padding: 0 20px;
   gap: 20px;
+  border-bottom: 1px solid var(--border-primary);
 }
 
 /* Menu Sidebar - Fixed on left */
@@ -53,8 +88,8 @@ code {
   top: 10vh;
   left: 0;
   z-index: 900;
-  background: white;
-  border-right: 1px solid rgb(235, 234, 234);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-primary);
   overflow-y: auto;
 }
 
@@ -73,43 +108,41 @@ code {
   top: 10vh;
   right: 0;
   z-index: 800;
-  background: white;
-  border-left: 1px solid rgb(235, 234, 234);
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-primary);
   overflow-y: auto;
 }
 
-/* Main Content Area - Space for both sidebars */
+/* Main Content Area */
 .dashboard-content {
   margin-left: 240px;
   margin-right: 350px;
   width: calc(100% - 240px - 350px);
   min-height: calc(100vh - 10vh);
   padding: 30px;
-  background: rgb(248, 249, 250);
+  background: var(--bg-primary);
 }
 
-/* Content wrapper inside dashboard */
 .content {
   width: 100%;
 }
 
 /* ============================================ */
-/* DASHBOARD SPECIFIC STYLES                   */
+/* DASHBOARD STYLES                            */
 /* ============================================ */
 
 .username h6 {
   font-size: 1.5rem;
   font-weight: 400;
-  color: rgb(83, 83, 83);
+  color: var(--text-primary);
   margin-bottom: 20px;
 }
 
 .divider {
   border: none;
-  background: #d1d1d1;
+  background: var(--border-primary);
   height: 1px;
   margin: 20px 0;
-  margin-bottom: 5%;
 }
 
 .section {
@@ -126,11 +159,12 @@ code {
   display: inline-block;
   font-size: 1.2rem;
   font-weight: 300;
+  color: var(--text-primary);
 }
 
 .section-icon {
   transform: scale(0.8);
-  color: rgb(112, 112, 112);
+  color: var(--text-secondary);
   padding: 0;
   margin: 0;
   margin-right: 10px;
@@ -142,36 +176,44 @@ code {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
 }
 
 .data .first h3 {
   font-size: 2.5rem;
   font-weight: 300;
-  color: rgb(71, 71, 71);
+  color: var(--text-primary);
 }
 
 .data .first p {
   font-size: 0.8rem;
-  color: rgb(136, 136, 136);
+  color: var(--text-secondary);
 }
 
 .data .first small {
   font-size: 0.8rem;
-  color: rgb(72, 194, 55);
+  color: var(--color-profit);
 }
 
 .data .first .profit {
-  color: rgb(72, 194, 55);
+  color: var(--color-profit);
+}
+
+.data .first .loss {
+  color: var(--color-loss);
 }
 
 .data hr {
-  border-left: 0.6px solid rgb(243, 242, 242);
+  border-left: 0.6px solid var(--border-primary);
   height: 70px;
 }
 
 .data .second p {
   font-size: 0.8rem;
-  color: rgb(136, 136, 136);
+  color: var(--text-secondary);
   margin-bottom: 10px;
   white-space: nowrap;
 }
@@ -180,25 +222,25 @@ code {
   display: inline;
   margin-left: 5%;
   font-size: 0.9rem;
-  color: rgb(100, 100, 100);
+  color: var(--text-primary);
 }
 
 /* ============================================ */
-/* ORDERS & HOLDINGS TABLES                    */
+/* TABLES - DARK THEME                         */
 /* ============================================ */
 
 .title {
   font-size: 1.3rem;
   font-weight: 300;
-  color: rgb(71, 71, 71);
+  color: var(--text-primary);
   margin-bottom: 2%;
 }
 
 .order-table {
-  background: white;
+  background: var(--bg-card);
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgb(235, 234, 234);
+  border: 1px solid var(--border-primary);
   margin-top: 20px;
 }
 
@@ -208,17 +250,17 @@ code {
 }
 
 .order-table tr {
-  border-top: 1px solid #f1f1f1;
-  border-bottom: 1px solid #f1f1f1;
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .order-table th {
   text-align: right;
   padding: 15px 10px;
-  color: rgb(145, 145, 145);
-  font-weight: 300;
+  color: var(--text-secondary);
+  font-weight: 500;
   font-size: 0.8rem;
-  background: rgb(248, 249, 250);
+  background: var(--bg-secondary);
 }
 
 .order-table tr th:first-child,
@@ -231,19 +273,27 @@ code {
   text-align: right;
   font-weight: 400;
   font-size: 0.9rem;
-  color: rgb(73, 73, 73);
+  color: var(--text-primary);
 }
 
 .order-table td.profit {
-  color: rgb(72, 194, 55);
+  color: var(--color-profit);
 }
 
 .order-table td.loss {
-  color: rgb(250, 118, 78);
+  color: var(--color-loss);
+}
+
+.order-table tbody tr {
+  transition: background 0.2s;
+}
+
+.order-table tbody tr:hover {
+  background: var(--bg-hover);
 }
 
 /* ============================================ */
-/* BUTTONS & COMMON ELEMENTS                   */
+/* BUTTONS - DARK THEME                        */
 /* ============================================ */
 
 .btn {
@@ -261,43 +311,44 @@ code {
 }
 
 .btn-blue {
-  background: rgb(65, 132, 243);
+  background: var(--color-blue);
   color: white;
 }
 
 .btn-blue:hover {
-  background: rgb(51, 119, 231);
+  background: var(--color-blue-hover);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(65, 132, 243, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-green {
-  background: rgb(72, 194, 55);
+  background: var(--color-profit);
   color: white;
 }
 
 .btn-green:hover {
-  background: rgb(62, 174, 45);
+  background: #1e8e83;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(72, 194, 55, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-grey {
-  background: rgb(224, 224, 224);
-  color: rgb(70, 70, 70);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
 }
 
 .btn-grey:hover {
-  background: rgb(200, 200, 200);
+  background: var(--bg-hover);
 }
 
 .btn-red {
-  background: rgb(255, 87, 34);
+  background: var(--color-loss);
   color: white;
 }
 
 .btn-red:hover {
-  background: rgb(230, 74, 25);
+  background: #e53935;
 }
 
 /* ============================================ */
@@ -307,8 +358,8 @@ code {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgb(235, 234, 234);
-  border-top-color: rgb(65, 132, 243);
+  border: 4px solid var(--border-primary);
+  border-top-color: var(--color-blue);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -319,39 +370,38 @@ code {
   }
 }
 
-/* Price Flash Animations */
 .value-updating {
   transition: all 0.3s ease;
 }
 
 .price-flash-up {
-  animation: flash-green-zerodha 0.6s ease;
+  animation: flash-green-dark 0.6s ease;
 }
 
 .price-flash-down {
-  animation: flash-red-zerodha 0.6s ease;
+  animation: flash-red-dark 0.6s ease;
 }
 
-@keyframes flash-green-zerodha {
+@keyframes flash-green-dark {
   0%, 100% {
     background-color: transparent;
   }
   50% {
-    background-color: rgba(103, 201, 136, 0.12);
+    background-color: rgba(38, 166, 154, 0.2);
   }
 }
 
-@keyframes flash-red-zerodha {
+@keyframes flash-red-dark {
   0%, 100% {
     background-color: transparent;
   }
   50% {
-    background-color: rgba(223, 73, 73, 0.12);
+    background-color: rgba(239, 83, 80, 0.2);
   }
 }
 
 /* ============================================ */
-/* SCROLLBAR STYLING                           */
+/* SCROLLBAR - DARK THEME                      */
 /* ============================================ */
 
 ::-webkit-scrollbar {
@@ -360,20 +410,20 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(248, 249, 250);
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(224, 224, 224);
+  background: var(--bg-elevated);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(200, 200, 200);
+  background: #4A4E5A;
 }
 
 /* ============================================ */
-/* MODAL OVERLAY                               */
+/* MODAL - DARK THEME                          */
 /* ============================================ */
 
 .modal-overlay {
@@ -382,12 +432,13 @@ code {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   animation: fadeIn 0.2s;
+  backdrop-filter: blur(4px);
 }
 
 @keyframes fadeIn {
@@ -400,7 +451,8 @@ code {
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   padding: 30px;
   max-width: 500px;
@@ -408,6 +460,7 @@ code {
   max-height: 80vh;
   overflow-y: auto;
   animation: slideUp 0.3s;
+  box-shadow: var(--shadow-lg);
 }
 
 @keyframes slideUp {
@@ -419,6 +472,57 @@ code {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* ============================================ */
+/* UTILITY CLASSES                             */
+/* ============================================ */
+
+.profit {
+  color: var(--color-profit);
+  font-weight: 500;
+}
+
+.loss {
+  color: var(--color-loss);
+  font-weight: 500;
+}
+
+.success-message {
+  background: rgba(38, 166, 154, 0.15);
+  border: 1px solid rgba(38, 166, 154, 0.3);
+  color: var(--color-profit);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.error-message {
+  background: rgba(239, 83, 80, 0.15);
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  color: var(--color-loss);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ============================================ */
+/* TOOLTIP - DARK THEME                        */
+/* ============================================ */
+
+.MuiTooltip-tooltip {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+  font-size: 0.75rem !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--border-primary) !important;
+}
+
+.MuiTooltip-arrow {
+  color: var(--bg-elevated) !important;
 }
 
 /* ============================================ */
@@ -449,7 +553,7 @@ code {
 
 @media (max-width: 992px) {
   .watchlist-container {
-    display: none; /* Hide watchlist on tablets */
+    display: none;
   }
 
   .dashboard-content {
@@ -497,53 +601,4 @@ code {
     width: 100%;
     padding: 0;
   }
-}
-
-/* ============================================ */
-/* UTILITY CLASSES                             */
-/* ============================================ */
-
-.profit {
-  color: rgb(72, 194, 55);
-  font-weight: 500;
-}
-
-.loss {
-  color: rgb(250, 118, 78);
-  font-weight: 500;
-}
-
-.success-message {
-  background: rgba(72, 194, 55, 0.1);
-  border: 1px solid rgba(72, 194, 55, 0.3);
-  color: rgb(72, 194, 55);
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.error-message {
-  background: rgba(250, 118, 78, 0.1);
-  border: 1px solid rgba(250, 118, 78, 0.3);
-  color: rgb(250, 118, 78);
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-/* ============================================ */
-/* TOOLTIP ENHANCEMENTS                        */
-/* ============================================ */
-
-.MuiTooltip-tooltip {
-  background: rgb(71, 71, 71) !important;
-  font-size: 0.75rem !important;
-  padding: 8px 12px !important;
-  border-radius: 4px !important;
-}
-
-.MuiTooltip-arrow {
-  color: rgb(71, 71, 71) !important;
 }

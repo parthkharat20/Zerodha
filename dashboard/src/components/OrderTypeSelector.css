@@ -1,0 +1,134 @@
+/* Order Type Selector - Zerodha Theme */
+.order-type-selector {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .order-type-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .type-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  
+  .type-tab:hover {
+    background: rgb(248, 249, 250);
+    border-color: rgb(65, 132, 243);
+  }
+  
+  .type-tab.active {
+    background: rgba(65, 132, 243, 0.08);
+    border-color: rgb(65, 132, 243);
+    border-width: 2px;
+  }
+  
+  .type-icon {
+    font-size: 1.2rem;
+  }
+  
+  .type-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .type-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+  }
+  
+  .type-desc {
+    font-size: 0.65rem;
+    color: rgb(136, 136, 136);
+    line-height: 1.3;
+  }
+  
+  /* Advanced Options */
+  .advanced-options {
+    background: rgb(248, 249, 250);
+    border: 1px solid rgb(235, 234, 234);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .option-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .option-group input {
+    padding: 8px 10px;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 4px;
+    font-size: 0.85rem;
+  }
+  
+  .option-group input:focus {
+    outline: none;
+    border-color: rgb(65, 132, 243);
+  }
+  
+  .helper-text {
+    font-size: 0.7rem;
+    color: rgb(136, 136, 136);
+    font-style: italic;
+  }
+  
+  /* Order Tips */
+  .order-tips {
+    background: rgba(65, 132, 243, 0.05);
+    border: 1px solid rgba(65, 132, 243, 0.2);
+    border-radius: 6px;
+    padding: 12px;
+  }
+  
+  .order-tips h5 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgb(71, 71, 71);
+    margin: 0 0 8px 0;
+  }
+  
+  .order-tips ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .order-tips li {
+    font-size: 0.75rem;
+    color: rgb(71, 71, 71);
+    line-height: 1.6;
+    margin-bottom: 4px;
+  }
+  
+  .order-tips strong {
+    color: rgb(65, 132, 243);
+  }

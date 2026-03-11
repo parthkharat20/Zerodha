@@ -1,99 +1,87 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import Menu from "./Menu";
-import { 
-  Notifications, 
-  NotificationsActive,
-  AddCircleOutline,
+import {
+  Notifications,
+  Close,
+  ShowChart,
   AccountBalanceWallet,
+  Add,
   TrendingUp,
-  ShowChart
+  TrendingDown,
 } from "@mui/icons-material";
+import axios from "axios";
 import "./TopBar.css";
 
 const TopBar = () => {
-  const [funds, setFunds] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [marketStatus, setMarketStatus] = useState("OPEN"); // OPEN, CLOSED, PRE_OPEN
+  const [funds, setFunds] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [indices, setIndices] = useState([
+    { name: "NIFTY 50", value: 22156.80, change: 0.45 },
+    { name: "SENSEX", value: 73041.58, change: 0.38 },
+    { name: "BANKNIFTY", value: 47850.25, change: -0.52 },
+    { name: "FINNIFTY", value: 20567.90, change: 0.65 },
+  ]);
 
   useEffect(() => {
-    fetchFunds();
-    checkMarketStatus();
-    
-    const fundsInterval = setInterval(fetchFunds, 30000); // Every 30 sec
-    const marketInterval = setInterval(checkMarketStatus, 60000); // Every minute
-    
-    return () => {
-      clearInterval(fundsInterval);
-      clearInterval(marketInterval);
-    };
+    fetchData();
+    // Simulate real-time index updates
+    const interval = setInterval(() => {
+      setIndices(prev => prev.map(index => ({
+        ...index,
+        value: index.value + (Math.random() - 0.5) * 50,
+        change: (Math.random() - 0.5) * 2,
+      })));
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const fetchFunds = async () => {
+  const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
     try {
-      const response = await axios.get("http://localhost:3002/funds", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setFunds(response.data);
+      const [fundsRes, statsRes] = await Promise.all([
+        axios.get("http://localhost:3002/funds", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get("http://localhost:3002/dashboard/stats", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      setFunds(fundsRes.data);
+      setStats(statsRes.data);
     } catch (err) {
-      console.error("Error fetching funds:", err);
+      console.error("Error:", err);
     }
   };
 
-  const checkMarketStatus = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const currentTime = hours * 60 + minutes;
-
-    const marketOpen = 9 * 60 + 15; // 9:15 AM
-    const marketClose = 15 * 60 + 30; // 3:30 PM
-    const preOpen = 9 * 60; // 9:00 AM
-
-    if (currentTime >= preOpen && currentTime < marketOpen) {
-      setMarketStatus("PRE_OPEN");
-    } else if (currentTime >= marketOpen && currentTime < marketClose) {
-      setMarketStatus("OPEN");
-    } else {
-      setMarketStatus("CLOSED");
-    }
-  };
-
-  const getMarketStatusColor = () => {
-    switch (marketStatus) {
-      case "OPEN": return "#4caf50";
-      case "PRE_OPEN": return "#ff9800";
-      case "CLOSED": return "#f44336";
-      default: return "#999";
-    }
-  };
-
-  // Sample indices data (can be replaced with real API)
-  const indices = [
-    { name: "NIFTY 50", value: "24,188.65", change: "+0.42%", isUp: true },
-    { name: "SENSEX", value: "79,943.26", change: "+0.38%", isUp: true },
-    { name: "BANKNIFTY", value: "52,156.80", change: "+0.55%", isUp: true },
-    { name: "FINNIFTY", value: "23,442.10", change: "+0.48%", isUp: true },
-  ];
+  const totalPnL = stats?.totalPnL || 0;
 
   return (
     <div className="topbar-container">
       {/* Logo Section */}
       <div className="topbar-logo">
-        <Link to="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Link to="/dashboard">
           <div className="logo-icon">
-            <ShowChart style={{ fontSize: '2rem', color: '#4184f3' }} />
+            <ShowChart style={{ fontSize: "1.8rem", color: "var(--color-blue)" }} />
           </div>
           <div className="logo-text">
-            <span className="app-name">TradePro</span>
-            <span className="market-status" style={{ color: getMarketStatusColor() }}>
-              ● {marketStatus === "PRE_OPEN" ? "PRE OPEN" : marketStatus}
-            </span>
+            <div className="app-name">TradeX</div>
+            <div className="market-status">
+              <span style={{ 
+                width: "6px", 
+                height: "6px", 
+                borderRadius: "50%", 
+                background: "#26a69a",
+                display: "inline-block",
+                marginRight: "4px",
+              }}></span>
+              Market Open
+            </div>
           </div>
         </Link>
       </div>
@@ -104,52 +92,47 @@ const TopBar = () => {
           <div key={i} className="index-item">
             <p className="index-name">{index.name}</p>
             <div className="index-data">
-              <p className="index-value">{index.value}</p>
-              <p className={`index-change ${index.isUp ? 'up' : 'down'}`}>
-                {index.change}
-              </p>
+              <p className="index-value">{index.value.toFixed(2)}</p>
+              <span className={`index-change ${index.change >= 0 ? 'up' : 'down'}`}>
+                {index.change >= 0 ? '+' : ''}{index.change.toFixed(2)}%
+              </span>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Menu */}
-      <Menu />
-
-      {/* Right Section - Funds + Notifications */}
+      {/* Right Section */}
       <div className="topbar-right">
-        {/* Funds Display */}
-        <Link to="/dashboard/funds" style={{ textDecoration: 'none' }}>
-          <div className="funds-widget">
-            <div className="funds-icon">
-              <AccountBalanceWallet style={{ fontSize: '1.2rem' }} />
-            </div>
-            <div className="funds-info">
-              <p className="funds-label">Available</p>
-              <p className="funds-value">
-                ₹{funds?.availableBalance?.toFixed(2) || "0.00"}
-              </p>
-            </div>
-            <Link 
-              to="/dashboard/funds" 
-              className="add-funds-btn"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <AddCircleOutline style={{ fontSize: '1rem' }} />
-            </Link>
+        {/* Funds Widget */}
+        <Link to="/dashboard/funds" className="funds-widget" style={{ textDecoration: 'none' }}>
+          <div className="funds-icon">
+            <AccountBalanceWallet style={{ fontSize: "1.2rem" }} />
           </div>
+          <div className="funds-info">
+            <span className="funds-label">Available</span>
+            <span className="funds-value">
+              ₹{funds?.availableBalance?.toFixed(2) || "0.00"}
+            </span>
+          </div>
+          <button className="add-funds-btn">
+            <Add style={{ fontSize: "1rem" }} />
+          </button>
         </Link>
 
         {/* P&L Widget */}
-        {funds && funds.usedMargin > 0 && (
-          <div className="pnl-widget">
-            <TrendingUp style={{ fontSize: '1rem', color: '#4caf50' }} />
-            <div className="pnl-info">
-              <p className="pnl-label">Day's P&L</p>
-              <p className="pnl-value profit">+₹124.50</p>
-            </div>
+        <div className="pnl-widget">
+          <div className="pnl-info">
+            <span className="pnl-label">Total P&L</span>
+            <span className={`pnl-value ${totalPnL >= 0 ? 'profit' : 'loss'}`}>
+              {totalPnL >= 0 ? (
+                <TrendingUp style={{ fontSize: "1rem" }} />
+              ) : (
+                <TrendingDown style={{ fontSize: "1rem" }} />
+              )}
+              {totalPnL >= 0 ? '+' : ''}₹{totalPnL.toFixed(2)}
+            </span>
           </div>
-        )}
+        </div>
 
         {/* Notifications */}
         <div className="notifications-container">
@@ -157,13 +140,9 @@ const TopBar = () => {
             className="notifications-btn"
             onClick={() => setShowNotifications(!showNotifications)}
           >
-            {notifications.length > 0 ? (
-              <>
-                <NotificationsActive style={{ fontSize: '1.3rem' }} />
-                <span className="notification-badge">{notifications.length}</span>
-              </>
-            ) : (
-              <Notifications style={{ fontSize: '1.3rem' }} />
+            <Notifications style={{ fontSize: "1.2rem" }} />
+            {notifications.length > 0 && (
+              <span className="notification-badge">{notifications.length}</span>
             )}
           </button>
 
@@ -175,7 +154,10 @@ const TopBar = () => {
               </div>
               <div className="notifications-body">
                 {notifications.length === 0 ? (
-                  <p className="no-notifications">No new notifications</p>
+                  <div className="no-notifications">
+                    <Notifications style={{ fontSize: "2rem", color: "var(--text-disabled)" }} />
+                    <p>No new notifications</p>
+                  </div>
                 ) : (
                   notifications.map((notif, i) => (
                     <div key={i} className="notification-item">

@@ -1,21 +1,25 @@
-/* TopBar - Zerodha Theme */
+/* TopBar - Dark Professional Theme */
 .topbar-container {
-    width: 100%;
-    height: 10vh;
     display: flex;
     align-items: center;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
-    background: white;
-    box-sizing: border-box;
-    z-index: 9;
-    padding: 0 20px;
     gap: 20px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
   }
   
   /* Logo Section */
   .topbar-logo {
+    display: flex;
+    align-items: center;
     padding-right: 20px;
-    border-right: 1px solid rgb(235, 234, 234);
+    border-right: 1px solid var(--border-primary);
+  }
+  
+  .topbar-logo a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
   }
   
   .logo-icon {
@@ -30,72 +34,84 @@
   }
   
   .app-name {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     letter-spacing: -0.5px;
   }
   
   .market-status {
     font-size: 0.65rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
   
   /* Indices Section */
   .indices-container {
-    flex: 1;
     display: flex;
-    align-items: center;
-    gap: 25px;
-    padding: 0 20px;
+    gap: 20px;
     overflow-x: auto;
+    flex: 1;
+    padding: 0 10px;
+  }
+  
+  .indices-container::-webkit-scrollbar {
+    display: none;
   }
   
   .index-item {
-    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 120px;
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
   }
   
   .index-item:hover {
+    background: var(--bg-hover);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
   }
   
   .index-name {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
     font-weight: 600;
-    color: rgb(136, 136, 136);
-    text-transform: uppercase;
-    margin: 0 0 4px 0;
-    letter-spacing: 0.3px;
+    margin: 0;
   }
   
   .index-data {
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
   }
   
   .index-value {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: rgb(71, 71, 71);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
     margin: 0;
   }
   
   .index-change {
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 600;
   }
   
   .index-change.up {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .index-change.down {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* Right Section */
@@ -103,8 +119,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    padding-left: 20px;
-    border-left: 1px solid rgb(235, 234, 234);
+    margin-left: auto;
   }
   
   /* Funds Widget */
@@ -113,24 +128,24 @@
     align-items: center;
     gap: 10px;
     padding: 8px 12px;
-    background: linear-gradient(135deg, rgba(72, 194, 55, 0.08) 0%, rgba(72, 194, 55, 0.12) 100%);
-    border: 1px solid rgba(72, 194, 55, 0.2);
-    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(38, 166, 154, 0.2) 0%, rgba(38, 166, 154, 0.1) 100%);
+    border: 1px solid rgba(38, 166, 154, 0.3);
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
+    text-decoration: none;
   }
   
   .funds-widget:hover {
-    background: linear-gradient(135deg, rgba(72, 194, 55, 0.12) 0%, rgba(72, 194, 55, 0.16) 100%);
-    border-color: rgba(72, 194, 55, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(72, 194, 55, 0.15);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-profit);
   }
   
   .funds-icon {
+    color: var(--color-profit);
     display: flex;
     align-items: center;
-    color: rgb(72, 194, 55);
   }
   
   .funds-info {
@@ -141,33 +156,31 @@
   
   .funds-label {
     font-size: 0.7rem;
-    color: rgb(136, 136, 136);
-    margin: 0;
+    color: var(--text-secondary);
     font-weight: 500;
   }
   
   .funds-value {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: rgb(72, 194, 55);
-    margin: 0;
+    color: var(--color-profit);
   }
   
   .add-funds-btn {
+    background: var(--color-profit);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 4px;
-    background: white;
-    border-radius: 50%;
-    color: rgb(72, 194, 55);
     transition: all 0.2s;
   }
   
   .add-funds-btn:hover {
-    background: rgb(72, 194, 55);
-    color: white;
-    transform: scale(1.1);
+    background: #1e8e83;
+    transform: scale(1.05);
   }
   
   /* P&L Widget */
@@ -176,9 +189,9 @@
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    background: rgba(76, 175, 80, 0.08);
-    border: 1px solid rgba(76, 175, 80, 0.2);
-    border-radius: 8px;
+    background: rgba(38, 166, 154, 0.1);
+    border: 1px solid rgba(38, 166, 154, 0.2);
+    border-radius: 6px;
   }
   
   .pnl-info {
@@ -189,23 +202,20 @@
   
   .pnl-label {
     font-size: 0.7rem;
-    color: rgb(136, 136, 136);
-    margin: 0;
-    font-weight: 500;
+    color: var(--text-secondary);
   }
   
   .pnl-value {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
   }
   
   .pnl-value.profit {
-    color: rgb(72, 194, 55);
+    color: var(--color-profit);
   }
   
   .pnl-value.loss {
-    color: rgb(250, 118, 78);
+    color: var(--color-loss);
   }
   
   /* Notifications */
@@ -214,49 +224,61 @@
   }
   
   .notifications-btn {
-    background: transparent;
-    border: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    padding: 8px 10px;
+    border-radius: 6px;
     cursor: pointer;
-    padding: 8px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: rgb(136, 136, 136);
-    border-radius: 8px;
-    transition: all 0.2s;
     position: relative;
+    color: var(--text-secondary);
+    transition: all 0.2s;
   }
   
   .notifications-btn:hover {
-    background: rgb(248, 249, 250);
-    color: rgb(71, 71, 71);
+    background: var(--bg-hover);
+    color: var(--text-primary);
   }
   
   .notification-badge {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    background: rgb(244, 67, 54);
+    top: -4px;
+    right: -4px;
+    background: var(--color-loss);
     color: white;
-    font-size: 0.65rem;
-    font-weight: 600;
+    font-size: 0.6rem;
+    font-weight: 700;
     padding: 2px 5px;
     border-radius: 10px;
     min-width: 16px;
     text-align: center;
   }
   
+  /* Notifications Dropdown */
   .notifications-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 10px);
     right: 0;
-    margin-top: 10px;
     width: 320px;
-    background: white;
-    border: 1px solid rgb(224, 224, 224);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: slideDown 0.2s ease;
     z-index: 1000;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   .notifications-header {
@@ -264,28 +286,25 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 15px;
-    border-bottom: 1px solid rgb(235, 234, 234);
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--bg-card);
   }
   
   .notifications-header h4 {
     font-size: 0.9rem;
     font-weight: 600;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0;
   }
   
   .notifications-header button {
     background: transparent;
     border: none;
-    font-size: 1.5rem;
-    color: rgb(136, 136, 136);
+    color: var(--text-secondary);
     cursor: pointer;
+    font-size: 1.5rem;
     padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    line-height: 1;
   }
   
   .notifications-body {
@@ -296,44 +315,39 @@
   .no-notifications {
     padding: 40px 20px;
     text-align: center;
-    color: rgb(153, 153, 153);
+    color: var(--text-secondary);
     font-size: 0.85rem;
   }
   
   .notification-item {
     padding: 12px 15px;
-    border-bottom: 1px solid rgb(243, 242, 242);
-    cursor: pointer;
+    border-bottom: 1px solid var(--border-primary);
     transition: background 0.2s;
   }
   
   .notification-item:hover {
-    background: rgb(248, 249, 250);
-  }
-  
-  .notification-item:last-child {
-    border-bottom: none;
+    background: var(--bg-hover);
   }
   
   .notification-item p {
     font-size: 0.85rem;
-    color: rgb(71, 71, 71);
+    color: var(--text-primary);
     margin: 0 0 4px 0;
   }
   
   .notification-item span {
     font-size: 0.7rem;
-    color: rgb(153, 153, 153);
+    color: var(--text-secondary);
   }
   
   /* Responsive */
   @media (max-width: 1200px) {
     .indices-container {
-      gap: 15px;
+      gap: 10px;
     }
   
     .index-item {
-      min-width: 120px;
+      min-width: 100px;
     }
   }
   
@@ -344,7 +358,7 @@
   }
   
   @media (max-width: 768px) {
-    .topbar-logo .logo-text {
+    .indices-container {
       display: none;
     }
   }

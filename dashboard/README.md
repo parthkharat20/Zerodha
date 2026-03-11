@@ -1,70 +1,125 @@
-# Getting Started with Create React App
+# TradeX - Professional Trading Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, real-time stock trading platform built with React and Node.js.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 📈 Real-time stock prices with live updates
+- 💰 Portfolio management with live P&L tracking
+- 📊 Advanced charting and analytics
+- 🔔 Price alerts and notifications
+- 📖 Trading journal for performance tracking
+- 🧮 Advanced trade calculator with real charges
+- 🎯 AI-powered portfolio insights
+- 📰 Market news feed
+- 🌙 Professional dark theme
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Frontend:**
+- React 18
+- Chart.js for visualizations
+- Material-UI icons
+- Axios for API calls
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Backend:**
+- Node.js
+- Express
+- MongoDB
+- JWT authentication
 
-### `npm test`
+**APIs:**
+- Alpha Vantage for real-time stock data
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/tradex.git
+cd tradex
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Install dependencies
 
-### `npm run eject`
+Backend:
+```bash
+cd backend
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend:
+```bash
+cd dashboard
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Configure environment variables
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Create `.env` in dashboard folder:
+```
+REACT_APP_ALPHA_VANTAGE_API_KEY=your_api_key_here
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Start the servers
 
-## Learn More
+Backend:
+```bash
+cd backend
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Frontend:
+```bash
+cd dashboard
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+5. Open http://localhost:3000
 
-### Code Splitting
+## Default Credentials
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Email: demo@tradex.com
+Password: demo123
 
-### Analyzing the Bundle Size
+## Features Overview
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Dashboard
+- Live portfolio value
+- Today's P&L
+- Available balance
+- Quick stats
 
-### Making a Progressive Web App
+### Holdings & Positions
+- Real-time price updates every 30 seconds
+- Live P&L calculations
+- Detailed performance metrics
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Trade Calculator
+- Real brokerage calculations (STT, GST, etc.)
+- Break-even price calculator
+- Affordability checker
 
-### Advanced Configuration
+### Portfolio Insights
+- AI-powered analysis
+- Performance recommendations
+- Risk assessment
+- Diversification tips
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Price Alerts
+- Set custom price triggers
+- Browser notifications
+- Multiple alert types
 
-### Deployment
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+MIT
 
-### `npm run build` fails to minify
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For support: support@tradex.com
